@@ -16,7 +16,7 @@ from scipy import stats
 import time					
 
     
-class pseudo_labeling_iterative(object):
+class Pseudo_Labeling(object):
     # using all data points for pseudo-labels
     # iteratively take different percentage until all unlabelled data points are taken
     
@@ -85,7 +85,7 @@ class pseudo_labeling_iterative(object):
             self.model_list[tt] = XGBClassifier(**param_list[tt],use_label_encoder=False)
     
     def estimate_label_frequency(self, y):
-        # estimate the frequency
+        # estimate the label frequency empirically from the initial labeled data
         unique, label_frequency = np.unique( y[np.sum(self.num_augmented_per_class):], return_counts=True)
         print("==label_frequency without adjustment", np.round(label_frequency,3))
         
@@ -209,7 +209,8 @@ class pseudo_labeling_iterative(object):
 
             X,y = self.post_processing(cc,labels_within_threshold,X,y)
             
-        print("MaxPseudoPoint",MaxPseudoPoint)
+        if self.verbose:
+            print("MaxPseudoPoint",MaxPseudoPoint)
 
         if np.sum(self.num_augmented_per_class)==0:
             return X,y
@@ -240,20 +241,18 @@ class pseudo_labeling_iterative(object):
         else:
             return 0.05
         
-      
-
     def evaluate(self):
         y_test_pred = self.model.predict(self.x_test)
-        test_acc=accuracy_score(y_test_pred, self.y_test)*100
+        test_acc= np.round( accuracy_score(y_test_pred, self.y_test)*100, 2)# round to 2 digits xx.yy %
 
         print('+++Test Acc: {:.2f}%'.format(test_acc))
         self.test_acc +=[test_acc]
     
     def get_prob_at_max_class(self,pseudo_labels_prob):
         max_prob_matrix=np.zeros((pseudo_labels_prob.shape))
-        for jj in range(pseudo_labels_prob.shape[0]): 
-            idxMax=np.argmax(pseudo_labels_prob[jj,:])
-            max_prob_matrix[jj,idxMax]=pseudo_labels_prob[jj,idxMax]
+        for ii in range(pseudo_labels_prob.shape[0]):  # loop over each data point
+            idxMax=np.argmax(pseudo_labels_prob[ii,:]) # find the highest score class
+            max_prob_matrix[ii,idxMax]=pseudo_labels_prob[ii,idxMax]
         return max_prob_matrix
     
     def post_processing(self,cc,labels_within_threshold,X,y):      
@@ -347,15 +346,15 @@ class pseudo_labeling_iterative(object):
                 augmented_idx += labels_within_threshold.tolist()
 
                 
+            if self.verbose:
+                print("#augmented:", self.num_augmented_per_class, " no training data ", len(y))
+         
             if np.sum(self.num_augmented_per_class)==0: # no data point is augmented
                 return self.test_acc
                 
             # remove the selected data from unlabelled data
             self.unlabelled_data = np.delete(self.unlabelled_data, np.unique(augmented_idx), 0)   
 
-            if self.verbose:
-                print("#augmented:", self.num_augmented_per_class, " no training data ", len(y))
-         
         # evaluate at the last iteration for reporting purpose
         self.model.fit(X, y.ravel())
 
@@ -374,7 +373,7 @@ class pseudo_labeling_iterative(object):
 # FlexMatch Strategy for Pseudo-Labeling =======================================================================
 # Zhang, Bowen, Yidong Wang, Wenxin Hou, Hao Wu, Jindong Wang, Manabu Okumura, and Takahiro Shinozaki. 
 # "Flexmatch: Boosting semi-supervised learning with curriculum pseudo labeling." NeurIPS 2021
-class FlexMatch(pseudo_labeling_iterative):
+class FlexMatch(Pseudo_Labeling):
     # adaptive thresholding
     
     def __init__(self, model, unlabelled_data, x_test,y_test,
@@ -446,16 +445,18 @@ class FlexMatch(pseudo_labeling_iterative):
 
                 X,y = self.post_processing(cc,labels_within_threshold,X,y)
                 
+                
+                
+            if self.verbose:
+                print("#augmented:", self.num_augmented_per_class, " len of training data ", len(y))
+          
+
             if np.sum(self.num_augmented_per_class)==0: # no data point is augmented
                 return self.test_acc
                 
             # remove the selected data from unlabelled data
             self.unlabelled_data = np.delete(self.unlabelled_data, np.unique(augmented_idx), 0)
                 
-                
-            if self.verbose:
-                print("#augmented:", self.num_augmented_per_class, " len of training data ", len(y))
-          
         # evaluate at the last iteration for reporting purpose
         self.model.fit(X, y.ravel())
 
@@ -604,7 +605,7 @@ class FlexMatch(pseudo_labeling_iterative):
 #         self.evaluate()  
 #         return self.test_acc
     
-class csa(pseudo_labeling_iterative):
+class CSA(Pseudo_Labeling):
     # adaptive thresholding
     
     def __init__(self, model, unlabelled_data, x_test,y_test,upper_threshold = 0.9, 
@@ -690,7 +691,7 @@ class csa(pseudo_labeling_iterative):
             elif self.confidence_choice=="neg_ttest":
                 confidence=self.calculate_ttest(pseudo_labels_prob_list)
                 confidence=-np.asarray(confidence)
-            elif self.confidence_choice=="no": 
+            elif self.confidence_choice=="no_confidence": 
                 confidence=np.ones((1,num_points))
                 
             confidence=np.clip(confidence, a_min=0,a_max=np.max(confidence))
@@ -784,7 +785,7 @@ class csa(pseudo_labeling_iterative):
 # "In Defense of Pseudo-Labeling: An Uncertainty-Aware Pseudo-label Selection Framework for Semi-Supervised Learning." 
 # ICLR. 2020.
 #  https://arxiv.org/pdf/2101.06329.pdf
-class UPS(pseudo_labeling_iterative):
+class UPS(Pseudo_Labeling):
     # adaptive thresholding
     
     def __init__(self, model, unlabelled_data, x_test,y_test,upper_threshold = 0.8, lower_threshold = 0.2, \
@@ -810,7 +811,7 @@ class UPS(pseudo_labeling_iterative):
         return super().get_max_pseudo_point(class_freq,current_iter)
     def fit(self, X, y):
         
-        print("====================",self.lgname)
+        print("====================",self.algorithm_name)
 
         self.nClass=len(np.unique(y))
         if len(np.unique(y)) < len(np.unique(self.y_test)):

@@ -1,21 +1,10 @@
 #import pandas as pd 
 import numpy as np
-#from sklearn.metrics import accuracy_score
-#from sklearn.datasets import load_iris,load_breast_cancer,load_digits
-#from sklearn.model_selection import train_test_split
-#import matplotlib.pyplot as plt
 import copy
-#from sklearn.linear_model import SGDClassifier 
 from tqdm import tqdm
 from xgboost import XGBClassifier
-#from sklearn import preprocessing
-from pseudo_labelling_algorithms import pseudo_labeling_iterative,flex_pl#,entropy_pl,prediction_entropy
-#from pseudo_labelling_algorithms import flex_pl_teacher_student,pl_iterative_teacher_student
-from pseudo_labelling_algorithms import lcb_ucb,sinkhorn_original,sla_no_uncertainty
+from pseudo_labelling_algorithms import pseudo_labeling_iterative,FlexMatch
 from pseudo_labelling_algorithms import UPS,csa
-
-#from sklearn.preprocessing import StandardScaler
-#from load_data import load_encode_data
 import os
 from utils import get_train_test_unlabeled_data,get_low_perf_train_test_unlabeled
 import pickle
@@ -37,19 +26,6 @@ param['verbosity'] = 0
 param['silent'] = 1
 param['seed'] = 0
 
-#     param["eval_metric"] = "error"
-#     param['eta'] = 0.5
-#     param['gamma'] = 0.2
-#     param['max_depth'] = 3
-#     param['min_child_weight']=1
-#     param['max_delta_step'] = 0
-#     param['subsample']= 0.5
-#     param['colsample_bytree']=1
-#     
-#     param['seed'] = 0
-#     param['base_score'] = 0.5
-
-
 # create XGBoost instance with default hyper-parameters
 xgb = XGBClassifier(**param,use_label_encoder=False)
 
@@ -57,7 +33,6 @@ xgb = XGBClassifier(**param,use_label_encoder=False)
 # load the data
 with open('all_data.pickle', 'rb') as handle:
     [all_data, _datasetName] = pickle.load(handle)
-
 
 
 FromIndex=0

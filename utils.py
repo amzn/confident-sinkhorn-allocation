@@ -13,6 +13,13 @@ from sklearn.preprocessing import StandardScaler
 def str2num(s, encoder):
     return encoder[s]
 
+def append_acc_early_termination(AccList, NumIter):
+
+    if len(AccList)<=NumIter:
+        Acc_Last_Iter=AccList[-1]
+        AccList = AccList + [Acc_Last_Iter]*(1+NumIter-len(AccList))
+        
+    return AccList
 
 def rename_dataset(dataset_name):
     print(dataset_name)
