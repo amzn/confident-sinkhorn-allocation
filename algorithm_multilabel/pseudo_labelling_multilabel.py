@@ -1081,9 +1081,7 @@ class UPS(pseudo_labeling_iterative):
                 idxMax=np.argmax( pseudo_labels_prob[jj,:] )
                 uncertainty_rows[jj,idxMax]=np.std(pseudo_labels_prob_list[:,jj,idxMax])
                 #uncertainty_rows[jj,idxMax]=self.uncertainty_score(pseudo_labels_prob_list[:,jj,:])
-       
-            # larger is betetr
-       
+              
             
             pseudo_labels=np.zeros((max_prob_matrix.shape[0],self.nClass)).astype(int)
             for cc in range(self.nClass):
@@ -1096,9 +1094,7 @@ class UPS(pseudo_labeling_iterative):
                 
                 labels_within_threshold_cc=idx_sorted[temp_idx2][:MaxPseudoPoint]
                 
-                
-                #temp_idx =np.intersect1d( idx_sorted[temp_idx1] , idx_sorted[temp_idx2])
-                
+                                
                 pseudo_labels[labels_within_threshold_cc, cc]=1
 
             temp=np.sum(pseudo_labels,axis=1)            
@@ -1126,111 +1122,3 @@ class UPS(pseudo_labeling_iterative):
         # evaluate at the last iteration for reporting purpose
         self.evaluate()
         
-        
-class sinkhorn_original(pseudo_labeling_iterative):
-    # adaptive thresholding
-    def __init__(self, model, unlabelled_data, x_test,y_test,upper_threshold = 0.8, lower_threshold = 0.2, 
-           fraction_allocation=0.5,num_iters=10,verbose = False,datasetName=None):
-        super().__init__(model, unlabelled_data, x_test,y_test,upper_threshold,lower_threshold ,fraction_allocation,num_iters,verbose)
-        self.name="sinkhorn_original"
-        
-    def predict(self, X):
-        super().predict(X)
-    def predict_proba(self, X):
-        super().predict_proba(X)
-    def evaluate(self):
-        super().evaluate()
-    def get_max_pseudo_point(self,class_freq,current_iter):
-        return super().get_max_pseudo_point(class_freq,current_iter)
-    def set_ot_regularizer(self,nRow,nCol):
-        return super().set_ot_regularizer(nRow,nCol)
-    
-    def fit(self, X, y):
-        print("===================",self.name)
-
-        if len(np.unique(y)) < len(np.unique(self.y_test)):
-            print("num class in training data is less than test data !!!")
-        
-        
-        self.num_augmented_per_class=[]
-        
-        label_frequency = np.sum( y, axis=0)
-        print("==label_frequency w/o adjustment", np.round(label_frequency,3))
-        
-        #label_frequency=label_frequency/np.sum(label_frequency)+np.ones( self.nClass )*1.0/self.nClass
-
-        self.label_frequency=label_frequency/np.sum(label_frequency)
-        print("==label_frequency", np.round(self.label_frequency,3))
-        
-        
-        for current_iter in (tqdm(range(self.num_iters)) if self.verbose else range(self.num_iters)):
-            
-            # Fit to data
-            self.model.fit(X, y)
-            
-            self.evaluate()
-            
-
-            # estimate prob using unlabelled data
-            pseudo_labels_prob = self.model.predict_proba(self.unlabelled_data)
-            
-            pseudo_labels_prob=np.asarray(pseudo_labels_prob).T
-            pseudo_labels_prob=pseudo_labels_prob[1,:,:]
-    
-    
-            num_points=pseudo_labels_prob.shape[0]
-            # remove the old augmented data
-        
-            print("n_points/n_classes ={:d}/{:d} = {:.2f} ".format(num_points,self.nClass,
-                  num_points/self.nClass))
-            
-            
-            dist_points=np.ones( num_points+1 )
-            
-            #dist_points=dist_points/np.max(dist_points)
-            
-            regulariser=self.set_ot_regularizer(num_points,self.nClass)
-            C=1-pseudo_labels_prob # cost # expand Cost matrix
-
-            C=np.vstack((C,np.ones((1,self.nClass))))
-            C=np.hstack((C,np.ones((num_points+1,1))))
-            
-            K=np.exp(-C/regulariser)
-            
-            
-            # expand marginal dist for columns (class)
-            #dist_labels=np.ones( pseudo_labels_prob.shape[1] )*(0.5*pseudo_labels_prob.shape[0])
-            dist_labels = self.label_frequency*np.sum(dist_points)-1.0/self.nClass  # frequency of the class label
-            dist_labels = np.append(dist_labels,1)
-            
-            
-            if np.abs( np.sum(dist_labels) - np.sum(dist_points) ) > 0.001 :
-                print("np.sum(dist_labels) - np.sum(dist_points) > 0.001")
-            
-            uu=np.ones( (num_points+1,))
-            
-            #vv=np.ones( (pseudo_labels_prob.shape[1],))
-            for jj in range(100):
-                vv= dist_labels / np.dot(K.T, uu)
-                uu= dist_points / np.dot(K, vv)
-                
-            
-            # recompute pseudo-label-prob from SLA
-            temp= np.atleast_2d(uu).T*(K*vv.T)
-            assignment_matrix=temp[:-1,:-1]
-            #temp2 = ot.sinkhorn( dist_points , dist_labels, reg=regulariser, M=C )
-            
-            #pseudo_labels_prob=np.zeros((pseudo_labels_prob.shape))
-            #pseudo_labels_prob=temp2[:-1,:-1]
-
-            X,y=self.assignment_and_post_processing_CSA(assignment_matrix,pseudo_labels_prob,X,y,\
-                                                        current_iter,upper_threshold=0)
-            
-            if self.verbose:
-                print("#augmented:", self.num_augmented_per_class[-1], " no training data ", len(y))
-            if np.sum(self.num_augmented_per_class)==0:
-                return #self.test_acc
-                        
-        # evaluate at the last iteration for reporting purpose
-        self.evaluate()  
-    

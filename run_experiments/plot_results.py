@@ -31,7 +31,8 @@ save_dir = 'results_output' # path to the folder store the results
 out_file='' 
 numTrials=20 # number of repeated trials
 numIters=5 # number of used pseudo-iterations
-dataset_name='madelon_no' # datasets
+dataset_name='analcatdata_authorship' #segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
+        #German-credit |  madelon_no | dna_no | agaricus-lepiota | breast_cancer | digits
 list_algorithms=['Pseudo_Labeling','FlexMatch','UPS','CSA'] # list of algorithms to be plotted
 
 # the following parameters to be used to load the correct paths

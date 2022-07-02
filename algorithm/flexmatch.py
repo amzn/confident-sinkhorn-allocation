@@ -38,7 +38,7 @@ class FlexMatch(Pseudo_Labeling):
     def get_max_pseudo_point(self,class_freq,current_iter):
         return super().get_max_pseudo_point(class_freq,current_iter)
     def fit(self, X, y):
-        print("===================",self.algorithm_name)
+        print("=====",self.algorithm_name)
         self.nClass=len(np.unique(y))
         if len(np.unique(y)) < len(np.unique(self.y_test)):
             print("num class in training data is less than test data !!!")

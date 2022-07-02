@@ -101,7 +101,7 @@ class Pseudo_Labeling(object):
         if self.verbose:
             print("==label_frequency without adjustment", np.round(label_frequency,3))
         
-        # smooth the label frequency if the ratio between the max class / min class is significant
+        # smooth the label frequency if the ratio between the max class / min class is significant >5
         ratio=np.max(label_frequency)/np.min(label_frequency)
         if ratio>5:
             label_frequency=label_frequency/np.sum(label_frequency)+np.ones( self.nClass )*1.0/self.nClass
@@ -124,15 +124,11 @@ class Pseudo_Labeling(object):
             
             idx_sorted = np.argsort( max_prob_matrix[:,cc])[::-1] # decreasing        
         
-            #temp_idx = np.where(max_prob_matrix[idx_sorted,cc] > 0 )[0]
+            # we only accept index where max prob >0
+            idx_nonzero = np.where( max_prob_matrix[idx_sorted,cc] > 0 )[0]
             
-            temp_idx1 = np.where( max_prob_matrix[idx_sorted,cc] > 0 )[0]
-            #temp_idx2 = np.where( pseudo_labels_prob[idx_sorted[temp_idx1],cc] > 0.5)[0] # this is useless for binary classification
+            labels_within_threshold=idx_sorted[idx_nonzero][:MaxPseudoPoint[cc]]
             
-            labels_within_threshold=idx_sorted[temp_idx1][:MaxPseudoPoint[cc]]
-            #labels_within_threshold =np.intersect1d( idx_sorted[temp_idx1] , idx_sorted[temp_idx2])
-            
-            #labels_within_threshold= idx_sorted[temp_idx1][:MaxPseudoPoint[cc]]
             
             augmented_idx += labels_within_threshold.tolist()
 
@@ -151,7 +147,6 @@ class Pseudo_Labeling(object):
     
     
         # remove the selected data from unlabelled data
-        #self.unlabelled_data = np.delete(self.unlabelled_data_master, np.unique(self.selected_unlabelled_index), 0)
         self.unlabelled_data = np.delete(self.unlabelled_data, np.unique(augmented_idx), 0)  
 
         return X,y
@@ -224,7 +219,7 @@ class Pseudo_Labeling(object):
         X: train features
         y: train targets
         """
-        print("===================",self.algorithm_name)
+        print("=====",self.algorithm_name)
 
 
         self.nClass=len(np.unique(y))

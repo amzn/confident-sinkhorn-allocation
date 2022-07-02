@@ -89,7 +89,7 @@ if __name__ == '__main__':
     parser.add_argument('--numIters', type=int, default=5, help='number of Pseudo Iterations')
     parser.add_argument('--numTrials', type=int, default=20, help ='number of Trials (Repeated Experiments)' )
     parser.add_argument('--upper_threshold', type=float, default=0.8, help ='threshold in pseudo-labeling' )
-    parser.add_argument('--dataset_name', type=str, default='madelon_no', help='segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
+    parser.add_argument('--dataset_name', type=str, default='segment_2310_20', help='segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
         German-credit |  madelon_no | dna_no | agaricus-lepiota | breast_cancer | digits')
     parser.add_argument('--verbose', type=str, default='No', help='verbose Yes or No')
     parser.add_argument('--output_filename', type=str, default='', help='name of output files')

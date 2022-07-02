@@ -133,7 +133,7 @@ class CSA(Pseudo_Labeling):
 
 
     def fit(self, X, y):
-        print("===================",self.algorithm_name)
+        print("=====",self.algorithm_name)
         self.nClass=len(np.unique(y))
         if len(np.unique(y)) < len(np.unique(self.y_test)):
             print("num class in training data is less than test data !!!")
