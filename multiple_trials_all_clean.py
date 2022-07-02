@@ -3,10 +3,12 @@ import numpy as np
 import copy
 from tqdm import tqdm
 from xgboost import XGBClassifier
-from pseudo_labelling_algorithms import Pseudo_Labeling,FlexMatch
-from pseudo_labelling_algorithms import UPS,CSA
+from algorithm.pseudo_labeling import Pseudo_Labeling
+from algorithm.flexmatch import FlexMatch
+from algorithm.ups import UPS
+from algorithm.csa import CSA
 import os
-from utils import get_train_test_unlabeled_data,get_low_perf_train_test_unlabeled,append_acc_early_termination
+from utilities.utils import get_train_test_unlabeled_data,get_low_perf_train_test_unlabeled,append_acc_early_termination
 import pickle
 import warnings
 warnings.filterwarnings('ignore')
@@ -14,25 +16,6 @@ warnings.filterwarnings('ignore')
 path ='./vector_data/'
 
 
-# Concept similar to : https://www.analyticsvidhya.com/blog/2017/09/pseudo-labelling-semi-supervised-learning-technique/
-
-
-
-
-param = {}
-param['booster'] = 'gbtree'
-param['objective'] = 'binary:logistic'
-param['verbosity'] = 0
-param['silent'] = 1
-param['seed'] = 0
-
-# create XGBoost instance with default hyper-parameters
-xgb = XGBClassifier(**param,use_label_encoder=False)
-
-
-# load the data
-with open('all_data.pickle', 'rb') as handle:
-    [all_data, _datasetName] = pickle.load(handle)
 
 
 FromIndex=0
@@ -65,13 +48,10 @@ for ii, data in enumerate(all_data):
     
     AccPL=[0]*nRepeat
     AccFlex=[0]*nRepeat
-    AccSinkhorn=[0]*nRepeat
     AccCSA_NoConfidence=[0]*nRepeat
     AccCSA_TotalEnt=[0]*nRepeat
     AccCSA_TotalVar=[0]*nRepeat
     AccCSA_TTest=[0]*nRepeat
-
-    AccSinkhornOrig=[0]*nRepeat
     AccUPS=[0]*nRepeat
     
     for tt in range(nRepeat):
@@ -96,87 +76,73 @@ for ii, data in enumerate(all_data):
         # continue
       
         # method 1    
-        # pseudo_labeller = Pseudo_Labeling(copy.copy(xgb),
-        #         x_unlabeled,x_test,y_test, # for evaluation purpose
-        #         upper_threshold,lower_threshold,
-        #         num_iters=NumIter,verbose = True
-        #     )
+        pseudo_labeller = Pseudo_Labeling(x_unlabeled,x_test,y_test, # for evaluation purpose
+                upper_threshold,lower_threshold,
+                num_iters=NumIter,verbose = True
+            )
         
-        # pseudo_labeller.fit(x_train, y_train)
-        # AccPL[tt]=append_acc_early_termination(pseudo_labeller.test_acc,NumIter)
+        pseudo_labeller.fit(x_train, y_train)
+        AccPL[tt]=append_acc_early_termination(pseudo_labeller.test_acc,NumIter)
         
 
 
 
-        # pseudo_labeller = FlexMatch(copy.copy(xgb),
-        #         x_unlabeled,x_test,
-        #         y_test,upper_threshold, # for evaluation purpose
-        #         num_iters=NumIter,verbose = True
-        #     )
+        pseudo_labeller = FlexMatch(x_unlabeled,x_test,
+                y_test,upper_threshold, # for evaluation purpose
+                num_iters=NumIter,verbose = True
+            )
         
-        # pseudo_labeller.fit(x_train, y_train)
-        # AccFlex[tt]=append_acc_early_termination(pseudo_labeller.test_acc,NumIter)
+        pseudo_labeller.fit(x_train, y_train)
+        AccFlex[tt]=append_acc_early_termination(pseudo_labeller.test_acc,NumIter)
 
       
       
         #method 4   
-        # pseudo_labeller = CSA(copy.copy(xgb),
-        #         x_unlabeled,x_test,y_test, 
-        #         upper_threshold,lower_threshold,
-        #         num_iters=NumIter,
-        #         confidence_choice='ttest',
-        #         verbose = True
-        #     )
-        # pseudo_labeller.fit(x_train, y_train)
+        pseudo_labeller = CSA(x_unlabeled,x_test,y_test, 
+                upper_threshold,lower_threshold,
+                num_iters=NumIter,
+                confidence_choice='ttest',
+                verbose = True
+            )
+        pseudo_labeller.fit(x_train, y_train)
       
-        # AccCSA_TTest[tt]=append_acc_early_termination(pseudo_labeller.test_acc,NumIter)
+        AccCSA_TTest[tt]=append_acc_early_termination(pseudo_labeller.test_acc,NumIter)
 
 
-        # print(pseudo_labeller.elapse_xgb)
-        # print(pseudo_labeller.elapse_ttest)
-        # print(pseudo_labeller.elapse_sinkhorn)
-        
-        
     
-        # pseudo_labeller = CSA(copy.copy(xgb),
-        #         x_unlabeled,x_test,y_test, 
-        #         upper_threshold,lower_threshold,
-        #         num_iters=NumIter,
-        #         confidence_choice='variance',
-        #         verbose = True
-        #     )
-        # pseudo_labeller.fit(x_train, y_train)
+        pseudo_labeller = CSA(x_unlabeled,x_test,y_test, 
+                upper_threshold,lower_threshold,
+                num_iters=NumIter,
+                confidence_choice='variance',
+                verbose = True
+            )
+        pseudo_labeller.fit(x_train, y_train)
        
-        # AccCSA_TotalVar[tt]=append_acc_early_termination(pseudo_labeller.test_acc,NumIter)
+        AccCSA_TotalVar[tt]=append_acc_early_termination(pseudo_labeller.test_acc,NumIter)
 
         
     
-        # pseudo_labeller = CSA(copy.copy(xgb),
-        #         x_unlabeled,x_test,y_test, 
-        #         upper_threshold,lower_threshold,
-        #         num_iters=NumIter,
-        #         confidence_choice='no_confidence',
-        #         verbose = True
-        #     )
-        # pseudo_labeller.fit(x_train, y_train)
-      
-        # AccCSA_NoConfidence[tt]=append_acc_early_termination(pseudo_labeller.test_acc,NumIter)
+        pseudo_labeller = CSA(x_unlabeled,x_test,y_test, 
+                upper_threshold,lower_threshold,
+                num_iters=NumIter,
+                confidence_choice='no_confidence',
+                verbose = True
+            )
+        pseudo_labeller.fit(x_train, y_train)
+        AccCSA_NoConfidence[tt]=append_acc_early_termination(pseudo_labeller.test_acc,NumIter)
 
         
-        # pseudo_labeller = CSA(copy.copy(xgb),
-        #         x_unlabeled,x_test,y_test, 
-        #         upper_threshold,lower_threshold,
-        #         num_iters=NumIter,
-        #         confidence_choice='entropy',
-        #         verbose = True
-        #     )
+        pseudo_labeller = CSA(x_unlabeled,x_test,y_test, 
+                upper_threshold,lower_threshold,
+                num_iters=NumIter,
+                confidence_choice='entropy',
+                verbose = True
+            )
         
-        # pseudo_labeller.fit(x_train, y_train)
-    
-        # AccCSA_TotalEnt[tt]=append_acc_early_termination(pseudo_labeller.test_acc,NumIter)
+        pseudo_labeller.fit(x_train, y_train)
+        AccCSA_TotalEnt[tt]=append_acc_early_termination(pseudo_labeller.test_acc,NumIter)
 
-        pseudo_labeller = UPS(copy.copy(xgb),
-                x_unlabeled,x_test,y_test, 
+        pseudo_labeller = UPS(x_unlabeled,x_test,y_test, 
                 upper_threshold,lower_threshold,
                 num_iters=NumIter,
                 verbose = True
@@ -193,22 +159,6 @@ for ii, data in enumerate(all_data):
         print(AccUPS[tt])
 
       
-      
-        #method 7
-        # pseudo_labeller = sinkhorn_original(copy.copy(xgb),
-        #         x_unlabeled,x_test,y_test, 
-        #         upper_threshold,lower_threshold,
-        #         num_iters=NumIter,
-        #         flagRepetition=False,
-        #         verbose = True
-        #     )
-        
-        # pseudo_labeller.fit(x_train, y_train)
-        # AccSinkhornOrig[tt]=pseudo_labeller.test_acc
-        # if len(AccSinkhornOrig[tt])<=NumIter:
-        #     AccSinkhornOrig[tt] = AccSinkhornOrig[tt] + [AccSinkhornOrig[tt][-1]]*(1+NumIter-len(AccSinkhornOrig[tt]))
-        
-        
         
     # save result to file
     
@@ -221,11 +171,6 @@ for ii, data in enumerate(all_data):
     if np.sum(AccPL)>0:
         np.save(strFile, AccPL)
 
-    strFile=save_folder+"/Sinkhorn_{:d}_{:s}_{:d}_{:d}".format(ii,_datasetName[ii],FromIndex,ToIndex)
-    if np.sum(AccSinkhorn)>0:
-        np.save(strFile, AccSinkhorn)
-        
-    
     strFile=save_folder+"/CSA_TTest_{:d}_{:s}_{:d}_{:d}".format(ii,_datasetName[ii],FromIndex,ToIndex)
     if np.sum(AccCSA_TTest)>0:
         np.save(strFile, AccCSA_TTest)
@@ -237,7 +182,6 @@ for ii, data in enumerate(all_data):
     strFile=save_folder+"/CSA_TotalEnt_{:d}_{:s}_{:d}_{:d}".format(ii,_datasetName[ii],FromIndex,ToIndex)
     if np.sum(AccCSA_TotalEnt)>0:
         np.save(strFile, AccCSA_TotalEnt)
-                
         
     strFile=save_folder+"/CSA_NoConfidence_{:d}_{:s}_{:d}_{:d}".format(ii,_datasetName[ii],FromIndex,ToIndex)
     if np.sum(AccCSA_NoConfidence)>0:

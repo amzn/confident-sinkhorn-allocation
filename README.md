@@ -1,13 +1,37 @@
-# Pseudo Labeling to deal with small datasets
+# Confident Sinkhorn Allocation for Pseudo-Labeling
+https://arxiv.org/pdf/2206.05880.pdf
 
-Accompanying blog : <URL>
 
-Dataset: https://www.kaggle.com/oddrationale/mnist-in-csv
-(Download to the 'data' folder)
+# Plot results
+
+> Please specify the following parameters. These parameters will link to the correct files in your result folders
+
+save_dir = 'results_output' # path to the folder store the results
+out_file='' 
+numTrials=20 # number of repeated trials
+numIters=5 # number of used pseudo-iterations
+dataset_name='madelon_no' # datasets
+list_algorithms=['Pseudo_Labeling','FlexMatch','UPS','CSA'] # list of algorithms to be plotted
+
+> the following parameters to be used to load the correct paths
+confidence='ttest' # for CSA 
+upper_threshold=0.8 # for Pseudo_Labeling,FlexMatch
+low_threshold=0.2 # for UPS
+num_XGB_models=10 # for CSA and UPS
+
+
+```
+python plot_results.py
+```
+
+# All dataset is collected from UCI and stored in all_data.pickle
+
+> we can load all data with their datasetName as follows:
+```
+    with open('all_data.pickle', 'rb') as handle:
+        [all_data, datasetName_list] = pickle.load(handle)
+```
 
 ## Credits and References:
 
-1. Dong-Hyun Lee. "Pseudo-Label : The Simple and Efficient Semi-Supervised Learning Method for Deep Neural Networks" ICML 2013 Workshop : Challenges in Representation Learning (WREPL), Atlanta, Georgia, USA, 2013 (http://deeplearning.net/wp-content/uploads/2013/03/pseudo_label_final.pdf)
-2. https://github.com/peimengsui/semi_supervised_mnist
-3. https://www.analyticsvidhya.com/blog/2017/09/pseudo-labelling-semi-supervised-learning-technique/
-
+Vu Nguyen, Sachin Farfade, and Anton van den Hengel. "Confident Sinkhorn Allocation for Pseudo-Labeling." Workshop on Distribution-Free Uncertainty Quantification at ICML 2022
