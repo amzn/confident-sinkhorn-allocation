@@ -51,11 +51,13 @@ def rename_dataset(dataset_name):
 
 
 # 18,7,6,4,2
-def get_train_test_unlabeled(_datasetName,random_state=0): # for multi-classification
-    
+def get_train_test_unlabeled(_datasetName,path_to_data,random_state=0): # for multi-classification
+    """
+    path_to_data='all_data.pickle'
+    """
         
     # load the data
-    with open('all_data.pickle', 'rb') as handle:
+    with open(path_to_data, 'rb') as handle:
         [all_data, datasetName_list] = pickle.load(handle)
 
     dataset_index= datasetName_list.index(_datasetName)
