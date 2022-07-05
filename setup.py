@@ -13,7 +13,7 @@ setup(
         "joblib>=1.1.0",
         "kiwisolver>=1.4.3",
         "matplotlib>=3.5.2",
-        "numpy>=1.23.0",
+        "numpy>=1.21.0",
         "packaging>=21.3",
         "pandas>=1.4.3",
         "Pillow>=9.2.0",
