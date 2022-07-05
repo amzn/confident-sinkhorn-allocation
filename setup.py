@@ -21,7 +21,7 @@ setup(
         "python-dateutil>=2.8.2",
         "pytz>=2022.1",
         "scikit-learn>=1.0",
-        "scipy>=1.8.1",
+        "scipy>=1.7.1",
         "six>=1.16.0",
         "threadpoolctl>=3.1.0",
         "tqdm>=4.64.0",
