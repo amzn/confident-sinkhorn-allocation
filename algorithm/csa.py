@@ -36,8 +36,18 @@ class CSA(Pseudo_Labeling):
 
         super().__init__( unlabelled_data, x_test,y_test,num_iters=num_iters,num_XGB_models=num_XGB_models,verbose=verbose,IsMultiLabel=IsMultiLabel)
         
+        
         self.confidence_choice=confidence_choice
+
+        if self.IsMultiLabel==True: 
+            # by default, we use total_variance as the main criteria for multilabel classification
+            if self.confidence_choice is not None:
+                self.confidence_choice="variance"
+
+
         self.algorithm_name="CSA_" + confidence_choice
+
+
         
         self.elapse_xgb=[]
         self.elapse_ttest=[]
@@ -272,7 +282,7 @@ class CSA(Pseudo_Labeling):
             elif self.confidence_choice=="neg_ttest":
                 confidence=self.calculate_ttest(pseudo_labels_prob_list)
                 confidence=-np.asarray(confidence)
-            elif self.confidence_choice=="none":  # not using any confidence score, accepting all data point similar to SLA
+            elif self.confidence_choice==None:  # not using any confidence score, accepting all data point similar to SLA
                 confidence=np.ones((1,num_points))
                 
             confidence=np.clip(confidence, a_min=0,a_max=np.max(confidence))

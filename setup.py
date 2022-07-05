@@ -7,7 +7,6 @@ setup(
     include_package_data = True,
     description='Confident Sinkhorn Allocation',
     install_requires=[
-        "python==3.8"
         "colorama>=0.4.5",
         "cycler>=0.11.0",
         "fonttools>=4.33.3",
