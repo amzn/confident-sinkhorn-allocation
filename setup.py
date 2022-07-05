@@ -15,7 +15,7 @@ setup(
         "matplotlib>=3.5.2",
         "numpy>=1.21.0",
         "packaging>=21.3",
-        "pandas>=1.4.3",
+        "pandas>=1.2.3",
         "Pillow>=9.2.0",
         "pyparsing>=3.0.9",
         "python-dateutil>=2.8.2",
