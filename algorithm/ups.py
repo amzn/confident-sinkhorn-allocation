@@ -29,6 +29,20 @@ class UPS(Pseudo_Labeling):
     
     def __init__(self,  unlabelled_data, x_test,y_test,num_iters=5,upper_threshold = 0.8, lower_threshold = 0.2,\
             num_XGB_models=10,verbose = False,IsMultiLabel=False):
+
+        """
+        unlabelled_data      : [N x d] where N is the number of unlabeled data, d is the feature dimension
+        x_test               :[N_test x d]
+        y_test               :[N_test x 1] for multiclassification or [N_test x K] for multilabel classification
+        num_iters            : number of pseudo-iterations, recommended = 5 as in the paper
+        upper_threshold      : the upper threshold used for pseudo-labeling, e.g., we assign label if the prob > 0.8
+        fraction_allocation  : the faction of label allocation, if fraction_allocation=1, we assign labels to 100% of unlabeled data
+        lower_threshold      : lower threshold, used for UPS 
+        num_XGB_models       : number of XGB models used for UPS and CSA, recommended = 10
+        verbose              : verbose
+        IsMultiLabel         : False => Multiclassification or True => Multilabel classification
+        """
+
         super().__init__( unlabelled_data, x_test,y_test,num_iters=num_iters,upper_threshold=upper_threshold,\
             lower_threshold=lower_threshold,num_XGB_models=num_XGB_models,verbose=verbose,IsMultiLabel=IsMultiLabel)
         
@@ -49,7 +63,17 @@ class UPS(Pseudo_Labeling):
     def get_max_pseudo_point(self,class_freq,current_iter):
         return super().get_max_pseudo_point(class_freq,current_iter)
     def fit(self, X, y):
-        
+        """
+        main algorithm to perform pseudo labelling     
+
+        Args:   
+            X: train features [N x d]
+            y: train targets [N x 1]
+
+        Output:
+            we record the test_accuracy a vector of test accuracy per pseudo-iteration
+        """
+
         print("=====",self.algorithm_name)
 
         self.nClass=self.get_number_of_labels(y)
@@ -72,39 +96,11 @@ class UPS(Pseudo_Labeling):
         
             pseudo_labels_prob_list=np.asarray(pseudo_labels_prob_list)
             pseudo_labels_prob= np.mean(pseudo_labels_prob_list,axis=0)
-        
-            #go over each row (data point), only keep the argmax prob
-            # max_prob_matrix = self.get_prob_at_max_class(pseudo_labels_prob)
-        
-            # # calculate uncertainty estimation for each data points at the argmax class
-            # uncertainty_rows=np.ones((pseudo_labels_prob.shape))
-            # for ii in range(pseudo_labels_prob.shape[0]):# go over each row (data points)
-            #     idxMax=np.argmax( pseudo_labels_prob[ii,:] )
-            #     uncertainty_rows[ii,idxMax]=np.std(pseudo_labels_prob_list[:,ii,idxMax])
-
-            # augmented_idx=[]
-            # MaxPseudoPoint=[0]*self.nClass
-            # for cc in range(self.nClass):
-            #     # compute the adaptive threshold for each class
-               
-            #     MaxPseudoPoint[cc]=self.get_max_pseudo_point(self.label_frequency[cc],current_iter)
-
-            #     idx_sorted = np.argsort( max_prob_matrix[:,cc])[::-1] # decreasing        
-               
-            #     idx_within_prob = np.where( max_prob_matrix[idx_sorted,cc] > self.upper_threshold )[0]
-            #     idx_within_prob_uncertainty = np.where( uncertainty_rows[idx_sorted[idx_within_prob],cc] < self.lower_threshold)[0]
-                
-            #     labels_within_threshold=idx_sorted[idx_within_prob_uncertainty][:MaxPseudoPoint[cc]]
-                
-            #     augmented_idx += labels_within_threshold.tolist()
-
-            #     X,y = self.post_processing(cc,labels_within_threshold,X,y)
-
+ 
             X,y=self.label_assignment_and_post_processing(pseudo_labels_prob,X,y,current_iter)
     
             if np.sum(self.num_augmented_per_class)==0: # no data point is augmented
-                return #self.test_acc
-               
+                return
         
             if self.verbose:
                 print("#added:", self.num_augmented_per_class, " no train data", len(y))
@@ -114,4 +110,3 @@ class UPS(Pseudo_Labeling):
 
         self.evaluate_performance() 
             
-        #return self.test_acc

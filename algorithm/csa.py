@@ -21,6 +21,19 @@ from .pseudo_labeling import Pseudo_Labeling
 class CSA(Pseudo_Labeling):
     
     def __init__(self, unlabelled_data, x_test,y_test,num_iters=5,num_XGB_models=20,confidence_choice="ttest",verbose = False,IsMultiLabel=False):
+        """
+        unlabelled_data      : [N x d] where N is the number of unlabeled data, d is the feature dimension
+        x_test               :[N_test x d]
+        y_test               :[N_test x 1] for multiclassification or [N_test x K] for multilabel classification
+        num_iters            : number of pseudo-iterations, recommended = 5 as in the paper
+        upper_threshold      : the upper threshold used for pseudo-labeling, e.g., we assign label if the prob > 0.8
+        fraction_allocation  : the faction of label allocation, if fraction_allocation=1, we assign labels to 100% of unlabeled data
+        lower_threshold      : lower threshold, used for UPS 
+        num_XGB_models       : number of XGB models used for UPS and CSA, recommended = 10
+        verbose              : verbose
+        IsMultiLabel         : False => Multiclassification or True => Multilabel classification
+        """
+
         super().__init__( unlabelled_data, x_test,y_test,num_iters=num_iters,num_XGB_models=num_XGB_models,verbose=verbose,IsMultiLabel=IsMultiLabel)
         
         self.confidence_choice=confidence_choice
@@ -43,21 +56,29 @@ class CSA(Pseudo_Labeling):
         return super().get_max_pseudo_point(class_freq,current_iter)
     def set_ot_regularizer(self,nRow,nCol):
         return super().set_ot_regularizer(nRow,nCol)
-    # def total_uncertainty(self,pred):
-    #     return super().total_uncertainty(pred)
+
     
+    def data_uncertainty(self,pseudo_labels_prob_list):
+        """
+        Args:
+            pseudo_labels_prob_list: [M x N x K]
+        Output:
+            entropy: [N x 1]
+        """
     
-    def data_uncertainty(self,pred):
-    # pred [nModel, nPoint, nClass]
-    
-        ent=np.zeros((pred.shape[0],pred.shape[1]))
-        for mm in range(pred.shape[0]):
-            ent[mm,:]= self.entropy_prediction(pred[mm,:,:])
+        ent=np.zeros((pseudo_labels_prob_list.shape[0],pseudo_labels_prob_list.shape[1]))
+        for mm in range(pseudo_labels_prob_list.shape[0]):
+            ent[mm,:]= self.entropy_prediction(pseudo_labels_prob_list[mm,:,:])
     
         return np.mean(ent,axis=0)
 
     def entropy_prediction(self,ave_pred,atClass=None):
-        # pred [nPoint, nClass]
+        """
+        Args:
+            ave_pred: [N x K]
+        Output:
+            entropy: [N x 1]
+        """
         
         ent=[0]*ave_pred.shape[0]
         
@@ -65,8 +86,16 @@ class CSA(Pseudo_Labeling):
             ent[ii]= - np.sum( ave_pred[ii,:]*np.log(ave_pred[ii,:]))            
         return np.asarray(ent)
     
-    def total_entropy(self,pred, atClass=None):
-        ave_pred=np.mean(pred,axis=0) # average over model
+    def total_entropy(self,pseudo_labels_prob_list, atClass=None):
+        """
+        calculate total entropy
+        Args:
+            pseudo_labels_prob_list: [M x N x K]: M #XGB, N #unlabels, K #class
+        Output:
+            total_entropy score [N x 1]
+        """
+
+        ave_pred=np.mean(pseudo_labels_prob_list,axis=0) # average over model
 
         total_uncertainty=self.entropy_prediction(ave_pred,atClass)
         return total_uncertainty
@@ -80,15 +109,30 @@ class CSA(Pseudo_Labeling):
         knowledge_uncertainty = total_uncertainty-data_uncertainty
         return knowledge_uncertainty
     
-    def total_variance(self,pred):
+    def total_variance(self,pseudo_labels_prob_list):
+        """
+        calculate total variance
+        Args:
+            pseudo_labels_prob_list: [M x N x K]: M #XGB, N #unlabels, K #class
+        Output:
+            standard deviation score [N x 1]
+        """
+
         # [nModel, nPoint, nClass]
-        std_pred = np.std( pred, axis=0) # std over models
+        std_pred = np.std( pseudo_labels_prob_list, axis=0) # std over models
         total_std = np.sum(std_pred, axis=1) # sum of std over classes
         
         return total_std
     
     def calculate_ttest(self,pseudo_labels_prob_list):
-        
+        """
+        calculate t-test
+        Args:
+            pseudo_labels_prob_list: [M x N x K]: M #XGB, N #unlabels, K #class
+        Output:
+            t-test score [N x 1]
+        """
+
         num_points=pseudo_labels_prob_list.shape[1]
         
         var_rows_argmax=[0]*num_points
@@ -117,7 +161,7 @@ class CSA(Pseudo_Labeling):
             denominator=np.sqrt(temp)
             t_test[jj] = nominator/denominator
             
-            # compute degree of freedom
+            # compute degree of freedom=========================================
             nominator = (var_rows_argmax[jj] + var_rows_arg2ndmax[jj])**2
             
             denominator= var_rows_argmax[jj]**2 + var_rows_arg2ndmax[jj]**2
@@ -133,6 +177,17 @@ class CSA(Pseudo_Labeling):
 
 
     def fit(self, X, y):
+        """
+        main algorithm to perform pseudo labelling     
+
+        Args:   
+            X: train features [N x d]
+            y: train targets [N x 1]
+
+        Output:
+            we record the test_accuracy a vector of test accuracy per pseudo-iteration
+        """
+
         print("=====",self.algorithm_name)
 
         self.nClass=self.get_number_of_labels(y)
@@ -272,5 +327,4 @@ class CSA(Pseudo_Labeling):
         # evaluate_performance at the last iteration for reporting purpose
         self.model.fit(X, y)
 
-        self.evaluate_performance()  
-    
+        self.evaluate_performance() 

@@ -11,7 +11,7 @@ from confident_sinkhorn_allocation.algorithm.pseudo_labeling import Pseudo_Label
 from confident_sinkhorn_allocation.algorithm.flexmatch import FlexMatch
 from confident_sinkhorn_allocation.algorithm.ups import UPS
 from confident_sinkhorn_allocation.algorithm.csa import CSA
-from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled
+from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled,get_train_test_unlabeled_for_multilabel_classification
 
 import pickle
 
@@ -30,8 +30,8 @@ save_dir = 'results_output' # path to the folder store the results
 out_file='' 
 numTrials=20 # number of repeated trials
 numIters=5 # number of used pseudo-iterations
-dataset_name='digits' #segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
-        #German-credit |  madelon_no | dna_no | agaricus-lepiota | breast_cancer | digits
+dataset_name='emotions' #segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
+        #German-credit |  madelon_no | dna_no | agaricus-lepiota | breast_cancer | digits | emotions
 list_algorithms=['Pseudo_Labeling','FlexMatch','UPS','CSA'] # list of algorithms to be plotted
 
 # the following parameters to be used to load the correct paths
@@ -40,7 +40,20 @@ upper_threshold=0.8 # for Pseudo_Labeling,FlexMatch
 low_threshold=0.2 # for UPS
 num_XGB_models=10 # for CSA and UPS
 
-x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,random_state=0)
+IsMultiLabel=False # by default
+if dataset_name in ['yeast','emotions']: # multi-label
+    IsMultiLabel=True
+
+
+# load the data        
+if IsMultiLabel==False: # multiclassification
+    x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,random_state=0)
+else: # multi-label classification
+    x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled_for_multilabel_classification(dataset_name,random_state=0)
+
+
+
+
 
 # %%
 fig, ax1 = plt.subplots(figsize=(6,3.5))

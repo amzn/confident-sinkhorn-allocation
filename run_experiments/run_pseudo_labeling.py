@@ -41,11 +41,12 @@ def run_experiments(args, save_dir):
 
     accuracy = []
 
-    for tt in tqdm(range(numTrials)):
+    # run the experiments over multiple Trials, then average the results
+    for tt in tqdm(range(numTrials)): 
         
         np.random.seed(tt)
 
-        # load the data        
+        # load the data  ====================================================================      
         if IsMultiLabel==False: # multiclassification
             x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,random_state=tt)
         else: # multi-label classification

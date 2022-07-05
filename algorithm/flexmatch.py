@@ -27,6 +27,19 @@ class FlexMatch(Pseudo_Labeling):
     # adaptive thresholding
     
     def __init__(self, unlabelled_data, x_test,y_test,num_iters=5,upper_threshold = 0.9, verbose = False,IsMultiLabel=False):
+        """
+        unlabelled_data      : [N x d] where N is the number of unlabeled data, d is the feature dimension
+        x_test               :[N_test x d]
+        y_test               :[N_test x 1] for multiclassification or [N_test x K] for multilabel classification
+        num_iters            : number of pseudo-iterations, recommended = 5 as in the paper
+        upper_threshold      : the upper threshold used for pseudo-labeling, e.g., we assign label if the prob > 0.8
+        fraction_allocation  : the faction of label allocation, if fraction_allocation=1, we assign labels to 100% of unlabeled data
+        lower_threshold      : lower threshold, used for UPS 
+        num_XGB_models       : number of XGB models used for UPS and CSA, recommended = 10
+        verbose              : verbose
+        IsMultiLabel         : False => Multiclassification or True => Multilabel classification
+        """
+
         super().__init__( unlabelled_data, x_test,y_test,num_iters=num_iters,upper_threshold=upper_threshold,verbose=verbose,IsMultiLabel=IsMultiLabel)
         
         self.algorithm_name="FlexMatch"
@@ -39,6 +52,17 @@ class FlexMatch(Pseudo_Labeling):
     def get_max_pseudo_point(self,class_freq,current_iter):
         return super().get_max_pseudo_point(class_freq,current_iter)
     def fit(self, X, y):
+        """
+        main algorithm to perform pseudo labelling     
+
+        Args:   
+            X: train features [N x d]
+            y: train targets [N x 1]
+
+        Output:
+            we record the test_accuracy a vector of test accuracy per pseudo-iteration
+        """
+
         print("=====",self.algorithm_name)
         
         self.nClass=self.get_number_of_labels(y)

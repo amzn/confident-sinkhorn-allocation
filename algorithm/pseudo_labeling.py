@@ -16,7 +16,19 @@ class Pseudo_Labeling(object):
     def __init__(self, unlabelled_data, x_test,y_test, num_iters=5,upper_threshold = 0.8, \
             fraction_allocation=1,lower_threshold = None,num_XGB_models=0, \
                  verbose = False,IsMultiLabel=False):
-        
+        """
+        unlabelled_data      : [N x d] where N is the number of unlabeled data, d is the feature dimension
+        x_test               :[N_test x d]
+        y_test               :[N_test x 1] for multiclassification or [N_test x K] for multilabel classification
+        num_iters            : number of pseudo-iterations, recommended = 5 as in the paper
+        upper_threshold      : the upper threshold used for pseudo-labeling, e.g., we assign label if the prob > 0.8
+        fraction_allocation  : the faction of label allocation, if fraction_allocation=1, we assign labels to 100% of unlabeled data
+        lower_threshold      : lower threshold, used for UPS 
+        num_XGB_models       : number of XGB models used for UPS and CSA, recommended = 10
+        verbose              : verbose
+        IsMultiLabel         : False => Multiclassification or True => Multilabel classification
+        """
+
         self.IsMultiLabel=False
         self.algorithm_name="Pseudo_Labeling"
         self.x_test=x_test
@@ -229,9 +241,68 @@ class Pseudo_Labeling(object):
             max_prob_matrix[ii,idxMax]=pseudo_labels_prob[ii,idxMax]
         return max_prob_matrix
     
-    
-    def label_assignment_and_post_processing(self, pseudo_labels_prob,X,y, current_iter=0,upper_threshold=None):
+    def post_processing_and_augmentation(self,assigned_pseudo_labels,X,y):
+        """
+        after assigning the pseudo labels in the previous step, we post-process and augment them into X and y
+        Args:
+            assigned_pseudo_labels: [N x K] matrix where N is the #unlabels and K is the #class
+            assigned_pseudo_labels==0 indicates no assignment
+            assigned_pseudo_labels==1 indicates assignment.
+
+            X: existing pseudo_labeled + labeled data [ N' x d ]
+            y: existing pseudo_labeled + labeled data [ N' x 1 ] for multiclassification
+            y: existing pseudo_labeled + labeled data [ N' x K ] for multilabel classification
+        Output:
+            Augmented X
+            Augmented y
+        """
+
+        sum_by_cols=np.sum(assigned_pseudo_labels,axis=1)            
+        labels_satisfied_threshold = np.where(sum_by_cols>0)[0]
         
+        self.num_augmented_per_class.append( np.sum(assigned_pseudo_labels,axis=0).astype(int) )
+        
+        if len(labels_satisfied_threshold) == 0: # no point is selected
+            return X,y
+            
+        self.selected_unlabelled_index += labels_satisfied_threshold.tolist()
+
+        # augment the assigned labels to X and y ==============================================
+        X = np.vstack((self.unlabelled_data[labels_satisfied_threshold,:], X))
+
+        if self.IsMultiLabel==False: # y is [N x 1] matrix
+            # allow a single data point can be added into multiple 
+            y = np.vstack(( np.argmax( assigned_pseudo_labels[labels_satisfied_threshold,:],axis=1).reshape(-1,1), np.array(y).reshape(-1,1)))  
+          
+        else: # y is [N x L] matrix
+            y = np.vstack((assigned_pseudo_labels[labels_satisfied_threshold,:], np.array(y)))
+
+
+        if "CSA" in self.algorithm_name: # book keeping
+            self.len_unlabels.append( len(self.unlabelled_data) )
+            self.len_accepted_ttest.append( assigned_pseudo_labels.shape[0] ) 
+            self.len_selected.append(  np.sum(self.num_augmented_per_class) )
+        
+
+        # remove the selected data from unlabelled data
+        self.unlabelled_data = np.delete(self.unlabelled_data, np.unique(labels_satisfied_threshold), 0)
+        
+        return X,y
+
+    def label_assignment_and_post_processing(self, pseudo_labels_prob,X,y, current_iter=0,upper_threshold=None):
+        """
+        Given the threshold, we perform label assignment and post-processing
+
+        Args:
+            pseudo_labels_prob: predictive prob [N x K] where N is #unlabels, K is #class
+            X: existing pseudo_labeled + labeled data [ N' x d ]
+            y: existing pseudo_labeled + labeled data [ N' x 1 ] for multiclassification
+            y: existing pseudo_labeled + labeled data [ N' x K ] for multilabel classification
+
+        Output:
+            Augmented X = augmented_X + X
+            Augmented y = augmented_y + Y
+        """
         
         if self.IsMultiLabel==False:
             #go over each row (data point), only keep the argmax prob 
@@ -249,7 +320,7 @@ class Pseudo_Labeling(object):
         if 'CSA' in self.algorithm_name: # if using CSA, we dont use the upper threshold
             upper_threshold=0
             
-        pseudo_labels=np.zeros((max_prob_matrix.shape[0],self.nClass)).astype(int)
+        assigned_pseudo_labels=np.zeros((max_prob_matrix.shape[0],self.nClass)).astype(int)
 
         MaxPseudoPoint=[0]*self.nClass
         for cc in range(self.nClass): # loop over each class
@@ -263,43 +334,26 @@ class Pseudo_Labeling(object):
 
             # only select upto MaxPseudoPoint[cc] points
             labels_satisfied_threshold = labels_satisfied_threshold[:MaxPseudoPoint[cc]] 
-            pseudo_labels[labels_satisfied_threshold, cc]=1
+            assigned_pseudo_labels[labels_satisfied_threshold, cc]=1
 
         print("MaxPseudoPoint",MaxPseudoPoint)
         
-        temp=np.sum(pseudo_labels,axis=1)            
-        labels_satisfied_threshold = np.where(temp>0)[0]
-        
-        self.num_augmented_per_class.append( np.sum(pseudo_labels,axis=0).astype(int) )
-        
-        if len(labels_satisfied_threshold) == 0: # no point is selected
-            return X,y
-            
-        self.selected_unlabelled_index += labels_satisfied_threshold.tolist()
-
-        X = np.vstack((self.unlabelled_data[labels_satisfied_threshold,:], X))
-
-        if self.IsMultiLabel==False: # y is [N x 1] matrix
-            # allow a single data point can be added into multiple 
-            y = np.vstack(( np.argmax( pseudo_labels[labels_satisfied_threshold,:],axis=1).reshape(-1,1), np.array(y).reshape(-1,1)))  
-          
-        else: # y is [N x L] matrix
-            y = np.vstack((pseudo_labels[labels_satisfied_threshold,:], np.array(y)))
-
-
-        if "CSA" in self.algorithm_name: # book keeping
-            self.len_unlabels.append( len(self.unlabelled_data) )
-            self.len_accepted_ttest.append( max_prob_matrix.shape[0] ) 
-            self.len_selected.append(  np.sum(self.num_augmented_per_class) )
-        
-
-        # remove the selected data from unlabelled data
-        self.unlabelled_data = np.delete(self.unlabelled_data, np.unique(labels_satisfied_threshold), 0)
-        
-        return X,y
+        return self.post_processing_and_augmentation(assigned_pseudo_labels,X,y)
 
     def label_assignment_and_post_processing_FlexMatch(self, pseudo_labels_prob,X,y, current_iter=0,upper_threshold=None):
-        
+        """
+        Given the threshold, perform label assignments and augmentation
+        This function is particular for FlexMatch
+        Args:
+            pseudo_labels_prob: predictive prob [N x K] where N is #unlabels, K is #class
+            X: existing pseudo_labeled + labeled data [ N' x d ]
+            y: existing pseudo_labeled + labeled data [ N' x 1 ] for multiclassification
+            y: existing pseudo_labeled + labeled data [ N' x K ] for multilabel classification
+
+        Output:
+            Augmented X = augmented_X + X
+            Augmented y = augmented_y + Y
+        """
         
         if self.IsMultiLabel==False:
             #go over each row (data point), only keep the argmax prob 
@@ -312,6 +366,7 @@ class Pseudo_Labeling(object):
 
 
         # for each class, count the number of points > threshold
+        # this is the technique used in FlexMatch
         countVector=[0]*self.nClass
         for cc in range(self.nClass):
             temp=np.where(max_prob_matrix[:,cc]>self.upper_threshold)[0]
@@ -319,53 +374,37 @@ class Pseudo_Labeling(object):
         countVector_normalized=np.asarray(countVector)/np.max(countVector)
         
 
-
         if upper_threshold is None:
             upper_threshold=self.upper_threshold
             
-        pseudo_labels=np.zeros((max_prob_matrix.shape[0],self.nClass)).astype(int)
 
+        # assign labels if the prob > threshold ========================================================
+        assigned_pseudo_labels=np.zeros((max_prob_matrix.shape[0],self.nClass)).astype(int)
         MaxPseudoPoint=[0]*self.nClass
         for cc in range(self.nClass): # loop over each class
 
-            class_upper_thresh=countVector_normalized[cc]*self.upper_threshold
+            # note that in FlexMatch, the upper_threshold is updated below before using as the threshold
+            flex_class_upper_thresh=countVector_normalized[cc]*self.upper_threshold
 
+            # obtain the maximum number of points can be assigned per class
             MaxPseudoPoint[cc]=self.get_max_pseudo_point(self.label_frequency[cc],current_iter)
             
             idx_sorted = np.argsort( max_prob_matrix[:,cc])[::-1] # decreasing        
 
-            temp_idx = np.where(max_prob_matrix[idx_sorted,cc] > upper_threshold )[0]   
+            temp_idx = np.where(max_prob_matrix[idx_sorted,cc] > flex_class_upper_thresh )[0]   
             labels_satisfied_threshold=idx_sorted[temp_idx]
 
             # only select upto MaxPseudoPoint[cc] points
             labels_satisfied_threshold = labels_satisfied_threshold[:MaxPseudoPoint[cc]] 
-            pseudo_labels[labels_satisfied_threshold, cc]=1
+            assigned_pseudo_labels[labels_satisfied_threshold, cc]=1
 
-        print("MaxPseudoPoint",MaxPseudoPoint)
-        
-        temp=np.sum(pseudo_labels,axis=1)            
-        labels_satisfied_threshold = np.where(temp>0)[0]
-        
-        self.num_augmented_per_class.append( np.sum(pseudo_labels,axis=0).astype(int) )
-        
-        if len(labels_satisfied_threshold) == 0: # no point is selected
-            return X,y
-            
-        self.selected_unlabelled_index += labels_satisfied_threshold.tolist()
 
-        X = np.vstack((self.unlabelled_data[labels_satisfied_threshold,:], X))
-
-        if self.IsMultiLabel==False: # y is [N x 1] matrix
-            # allow a single data point can be added into multiple 
-            y = np.vstack(( np.argmax( pseudo_labels[labels_satisfied_threshold,:],axis=1).reshape(-1,1), np.array(y).reshape(-1,1)))  
-          
-        else: # y is [N x L] matrix
-            y = np.vstack((pseudo_labels[labels_satisfied_threshold,:], np.array(y)))
-
-        # remove the selected data from unlabelled data
-        self.unlabelled_data = np.delete(self.unlabelled_data, np.unique(labels_satisfied_threshold), 0)
+        if self.verbose:
+            print("MaxPseudoPoint",MaxPseudoPoint)
         
-        return X,y
+        # post-processing and augmenting the data into X and Y ==========================================
+        return self.post_processing_and_augmentation(assigned_pseudo_labels,X,y)
+
 
 
     def get_number_of_labels(self,y):
@@ -409,14 +448,14 @@ class Pseudo_Labeling(object):
         
     def fit(self, X, y):
         """
-        Perform pseudo labelling     
+        main algorithm to perform pseudo labelling     
 
         Args:   
             X: train features [N x d]
             y: train targets [N x 1]
 
         Output:
-            test_accuracy: a vector of test accuracy per pseudo-iteration
+            we record the test_accuracy a vector of test accuracy per pseudo-iteration
         """
         print("=====",self.algorithm_name)
 

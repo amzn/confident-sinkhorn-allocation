@@ -28,16 +28,14 @@ def run_experiments(args, save_dir):
     upper_threshold=args.upper_threshold
     verbose=args.verbose
     dataset_name=args.dataset_name
-
     IsMultiLabel=False # by default
 
     # in our list of datasets: ['yeast','emotions'] are multi-label classification dataset
-    # the rest are multiclassification
+    # the rest datasets are multiclassification
     if dataset_name in ['yeast','emotions']: # multi-label
         IsMultiLabel=True
 
     accuracy = []
-
 
     for tt in tqdm(range(numTrials)):
         
@@ -54,7 +52,6 @@ def run_experiments(args, save_dir):
                 upper_threshold=upper_threshold,
                 verbose = False,
                 IsMultiLabel=IsMultiLabel
-
             )
         pseudo_labeller.fit(x_train, y_train)
         
