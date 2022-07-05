@@ -179,28 +179,7 @@ class Pseudo_Labeling(object):
 
 
     
-    def set_ot_regularizer(self,nRow,nCol):
-        """
-        We set the Sinkhorn regularization parameter based on the ratio of Row/Column
-        
-        Args:
-            nRow: number of rows in our cost matrix for Sinkhorn algorithm
-            nCol: number of columns
-
-        Output:
-            regularization
-        """
-
-        if nRow/nCol>=300:
-            return 1
-        if nRow/nCol>=200:
-            return 0.5
-        elif nRow/nCol>=100:
-            return 0.2
-        elif nRow/nCol>=50:
-            return 0.1
-        else:
-            return 0.05
+    
         
     def evaluate_performance(self):
         """

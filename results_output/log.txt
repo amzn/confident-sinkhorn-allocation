@@ -90,3 +90,6 @@
 2022-07-05 11:35:14,348 Namespace(dataset_name='emotions', numIters=5, numTrials=20, output_filename='', save_dir='results_output', upper_threshold=0.8, verbose='No')
 2022-07-05 11:58:24,455 Namespace(dataset_name='emotions', numIters=5, numTrials=20, output_filename='', save_dir='results_output', upper_threshold=0.8, verbose='No')
 2022-07-05 12:19:57,434 Namespace(confidence_choice='ttest', dataset_name='emotions', numIters=5, numTrials=20, numXGBs=10, output_filename='', save_dir='results_output', verbose='No')
+2022-07-05 15:53:02,592 Namespace(confidence_choice='ttest', dataset_name='emotions', numIters=5, numTrials=20, numXGBs=10, output_filename='', save_dir='results_output', verbose='No')
+2022-07-05 15:54:02,058 Namespace(confidence_choice='ttest', dataset_name='emotions', numIters=5, numTrials=20, numXGBs=10, output_filename='', save_dir='results_output', verbose='No')
+2022-07-05 15:57:58,189 Namespace(confidence_choice='ttest', dataset_name='emotions', numIters=5, numTrials=20, numXGBs=10, output_filename='', save_dir='results_output', verbose='No')

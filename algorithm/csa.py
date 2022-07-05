@@ -54,10 +54,38 @@ class CSA(Pseudo_Labeling):
         super().evaluate_performance()
     def get_max_pseudo_point(self,class_freq,current_iter):
         return super().get_max_pseudo_point(class_freq,current_iter)
+   
     def set_ot_regularizer(self,nRow,nCol):
-        return super().set_ot_regularizer(nRow,nCol)
+        """
+        We set the Sinkhorn regularization parameter based on the ratio of Row/Column
+        
+        Args:
+            nRow: number of rows in our cost matrix for Sinkhorn algorithm
+            nCol: number of columns
 
-    
+        Output:
+            regularization
+        """
+
+        if nRow/nCol>=300:
+            regulariser=1
+        if nRow/nCol>=200:
+            regulariser=0.5
+        elif nRow/nCol>=100:
+            regulariser=0.2
+        elif nRow/nCol>=50:
+            regulariser=0.1
+        else:
+            regulariser=0.05
+
+        if self.IsMultiLabel:
+            if self.nClass>20:
+                regulariser=regulariser*5
+            else:
+                regulariser=regulariser*200
+
+        return regulariser
+
     def data_uncertainty(self,pseudo_labels_prob_list):
         """
         Args:
