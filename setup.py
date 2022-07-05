@@ -12,7 +12,7 @@ setup(
         "fonttools>=4.33.3",
         "joblib>=1.1.0",
         "kiwisolver>=1.4.3",
-        "matplotlib>=3.5.2",
+        "matplotlib>=3.1.2",
         "numpy>=1.21.0",
         "packaging>=21.3",
         "pandas>=1.2.3",
