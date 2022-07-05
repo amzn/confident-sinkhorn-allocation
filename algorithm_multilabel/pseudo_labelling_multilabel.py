@@ -131,7 +131,7 @@ class pseudo_labeling_iterative(object):
         return knowledge_uncertainty
 
 
-    def evaluate(self):
+    def evaluate_performance(self):
       
 
         y_test_pred = self.model.predict(self.x_test)
@@ -294,7 +294,7 @@ class pseudo_labeling_iterative(object):
             # Fit to data
             self.model.fit(X, y)
 
-            self.evaluate()
+            self.evaluate_performance()
             
             pseudo_labels_prob = self.model.predict_proba(self.unlabelled_data)
             pseudo_labels_prob=np.asarray(pseudo_labels_prob).T
@@ -319,8 +319,8 @@ class pseudo_labeling_iterative(object):
             if np.sum(self.num_augmented_per_class)==0:
                 return #self.test_acc
                 
-        # evaluate at the last iteration for reporting purpose
-        self.evaluate()
+        # evaluate_performance at the last iteration for reporting purpose
+        self.evaluate_performance()
 
         
     def predict(self, X):
@@ -344,8 +344,8 @@ class flexmatch_multilabel(pseudo_labeling_iterative):
         super().predict(X)
     def predict_proba(self, X):
         super().predict_proba(X)
-    def evaluate(self):
-        super().evaluate()
+    def evaluate_performance(self):
+        super().evaluate_performance()
     def get_max_pseudo_point(self,fraction_of_class,current_iter):
         return super().get_max_pseudo_point(fraction_of_class,current_iter)
     def fit(self, X, y):
@@ -363,7 +363,7 @@ class flexmatch_multilabel(pseudo_labeling_iterative):
             # Fit to data
             self.model.fit(X, y)
             
-            self.evaluate()
+            self.evaluate_performance()
 
             # estimate prob using unlabelled data
             pseudo_labels_prob = self.model.predict_proba(self.unlabelled_data)
@@ -430,8 +430,8 @@ class flexmatch_multilabel(pseudo_labeling_iterative):
             if self.verbose:
                 print("#augmented:", self.num_augmented_per_class[-1], " no training data ", len(y))
 
-        # evaluate at the last iteration for reporting purpose
-        self.evaluate()
+        # evaluate_performance at the last iteration for reporting purpose
+        self.evaluate_performance()
 
     
 
@@ -448,8 +448,8 @@ class sla(pseudo_labeling_iterative):
         super().predict(X)
     def predict_proba(self, X):
         super().predict_proba(X)
-    def evaluate(self):
-        super().evaluate()
+    def evaluate_performance(self):
+        super().evaluate_performance()
     def get_max_pseudo_point(self,fraction_of_class,current_iter):
         return super().get_max_pseudo_point(fraction_of_class,current_iter)
             
@@ -523,7 +523,7 @@ class sla(pseudo_labeling_iterative):
             self.model.fit(X, y)
             self.teacher_model.fit(X, y)
             
-            self.evaluate()
+            self.evaluate_performance()
             
             num_points=self.unlabelled_data.shape[0]
 
@@ -663,8 +663,8 @@ class sla(pseudo_labeling_iterative):
             if np.sum(self.num_augmented_per_class)==0:
                 return #self.test_acc
                         
-        # evaluate at the last iteration for reporting purpose
-        self.evaluate()
+        # evaluate_performance at the last iteration for reporting purpose
+        self.evaluate_performance()
         
         
 class csa(pseudo_labeling_iterative):
@@ -680,8 +680,8 @@ class csa(pseudo_labeling_iterative):
         super().predict(X)
     def predict_proba(self, X):
         super().predict_proba(X)
-    def evaluate(self):
-        super().evaluate()
+    def evaluate_performance(self):
+        super().evaluate_performance()
     def get_max_pseudo_point(self,fraction_of_class,current_iter):
         return super().get_max_pseudo_point(fraction_of_class,current_iter)
  
@@ -709,7 +709,7 @@ class csa(pseudo_labeling_iterative):
             self.model.fit(X, y)
             self.teacher_model.fit(X, y)
             
-            self.evaluate()
+            self.evaluate_performance()
             
             num_points=self.unlabelled_data.shape[0]
 
@@ -844,8 +844,8 @@ class csa(pseudo_labeling_iterative):
             if np.sum(self.num_augmented_per_class)==0:
                 return #self.test_acc
                         
-        # evaluate at the last iteration for reporting purpose
-        self.evaluate()
+        # evaluate_performance at the last iteration for reporting purpose
+        self.evaluate_performance()
 
 
 
@@ -862,8 +862,8 @@ class sla_noconfidence(pseudo_labeling_iterative):
         super().predict(X)
     def predict_proba(self, X):
         super().predict_proba(X)
-    def evaluate(self):
-        super().evaluate()
+    def evaluate_performance(self):
+        super().evaluate_performance()
     def get_max_pseudo_point(self,fraction_of_class,current_iter):
         return super().get_max_pseudo_point(fraction_of_class,current_iter)
  
@@ -896,7 +896,7 @@ class sla_noconfidence(pseudo_labeling_iterative):
             self.model.fit(X, y)
             self.teacher_model.fit(X, y)
             
-            self.evaluate()
+            self.evaluate_performance()
             
             num_points=self.unlabelled_data.shape[0]
 
@@ -1005,8 +1005,8 @@ class sla_noconfidence(pseudo_labeling_iterative):
             if np.sum(self.num_augmented_per_class)==0:
                 return #self.test_acc
                         
-        # evaluate at the last iteration for reporting purpose
-        self.evaluate()
+        # evaluate_performance at the last iteration for reporting purpose
+        self.evaluate_performance()
 
 
 #1. generate multiple XGB with different hyper
@@ -1028,8 +1028,8 @@ class UPS(pseudo_labeling_iterative):
         super().predict(X)
     def predict_proba(self, X):
         return super().predict_proba(X)
-    def evaluate(self):
-        super().evaluate()
+    def evaluate_performance(self):
+        super().evaluate_performance()
         
     def uncertainty_score(self, matrix_prob):
         return super().uncertainty_score(matrix_prob)
@@ -1055,7 +1055,7 @@ class UPS(pseudo_labeling_iterative):
 
             # Fit to data
             self.model.fit(X, y)
-            self.evaluate()
+            self.evaluate_performance()
             
             num_points=len(self.unlabelled_data)
 
@@ -1119,6 +1119,6 @@ class UPS(pseudo_labeling_iterative):
                 return #self.test_acc
 
             
-        # evaluate at the last iteration for reporting purpose
-        self.evaluate()
+        # evaluate_performance at the last iteration for reporting purpose
+        self.evaluate_performance()
         

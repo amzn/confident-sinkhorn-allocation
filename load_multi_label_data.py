@@ -10,9 +10,9 @@ Created on Thu Feb  3 14:25:12 2022
 from scipy.io import arff
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
+import pickle
 
-
-def load_yeast_multilabel(folder):
+def load_yeast_multilabel(folder=''):
     # temp = arff.loadarff(open('vector_data/yeast-train.arff', 'r'))
     # df_train = pd.DataFrame(temp[0])
     
@@ -38,7 +38,7 @@ def load_yeast_multilabel(folder):
 
 
 
-def load_emotions_multilabel(folder):
+def load_emotions_multilabel(folder=''):
     # temp = arff.loadarff(open('vector_data/yeast-train.arff', 'r'))
     # df_train = pd.DataFrame(temp[0])
     
@@ -64,7 +64,7 @@ def load_emotions_multilabel(folder):
 
 
 
-def load_genbase_multilabel(folder):
+def load_genbase_multilabel(folder=''):
     temp = arff.loadarff(open(folder+'/genbase/genbase.arff', 'r'))
     df = pd.DataFrame(temp[0])
     
@@ -97,3 +97,13 @@ def load_corel5k_multilabel(folder):
 
 #vu=load_emotions_multilabel()
 #vu=load_corel5k_multilabel()
+path ='./vector_data/'
+
+all_data=[]
+_datasetName=['emotions','yeast','genbase']
+all_data.append(load_yeast_multilabel(path))
+all_data.append(load_emotions_multilabel(path))
+all_data.append(load_genbase_multilabel(path))
+
+with open('all_data_multilabel.pickle', 'wb') as handle:
+    pickle.dump([all_data,_datasetName], handle)

@@ -20,8 +20,8 @@ from .pseudo_labeling import Pseudo_Labeling
 # Confident Sinkhorn Allocation==================================================================================================
 class CSA(Pseudo_Labeling):
     
-    def __init__(self, unlabelled_data, x_test,y_test,num_iters=5,num_XGB_models=20,confidence_choice="ttest",verbose = False):
-        super().__init__( unlabelled_data, x_test,y_test,num_iters=num_iters,num_XGB_models=num_XGB_models,verbose=verbose)
+    def __init__(self, unlabelled_data, x_test,y_test,num_iters=5,num_XGB_models=20,confidence_choice="ttest",verbose = False,IsMultiLabel=False):
+        super().__init__( unlabelled_data, x_test,y_test,num_iters=num_iters,num_XGB_models=num_XGB_models,verbose=verbose,IsMultiLabel=IsMultiLabel)
         
         self.confidence_choice=confidence_choice
         self.algorithm_name="CSA_" + confidence_choice
@@ -37,8 +37,8 @@ class CSA(Pseudo_Labeling):
         super().predict(X)
     def predict_proba(self, X):
         super().predict_proba(X)
-    def evaluate(self):
-        super().evaluate()
+    def evaluate_performance(self):
+        super().evaluate_performance()
     def get_max_pseudo_point(self,class_freq,current_iter):
         return super().get_max_pseudo_point(class_freq,current_iter)
     def set_ot_regularizer(self,nRow,nCol):
@@ -134,30 +134,30 @@ class CSA(Pseudo_Labeling):
 
     def fit(self, X, y):
         print("=====",self.algorithm_name)
-        self.nClass=len(np.unique(y))
-        if len(np.unique(y)) < len(np.unique(self.y_test)):
-            print("num class in training data is less than test data !!!")
-        
-        self.num_augmented_per_class=[0]*self.nClass
-        
+
+        self.nClass=self.get_number_of_labels(y)
+
         self.label_frequency=self.estimate_label_frequency(y)
 
         for current_iter in (tqdm(range(self.num_iters)) if self.verbose else range(self.num_iters)):
             
             # Fit to data
-            self.model.fit(X, y.ravel())
+            self.model.fit(X, y)
             
-            self.evaluate()
+            self.evaluate_performance()
+
             
             num_points=self.unlabelled_data.shape[0]
             pseudo_labels_prob_list=[0]*self.num_XGB_models
 
             tic = time.perf_counter() 
 
-            # estimate prob using unlabelled data using M XGB models           
+            # estimate prob using unlabelled data on M XGB models
+            pseudo_labels_prob_list=[0]*self.num_XGB_models
             for mm in range(self.num_XGB_models):
-                self.XGBmodels_list[mm].fit(X, y.ravel())
-                pseudo_labels_prob_list[mm] = self.XGBmodels_list[mm].predict_proba(self.unlabelled_data)
+                self.XGBmodels_list[mm].fit(X, y)
+                pseudo_labels_prob_list[mm] = self.get_predictive_prob_for_unlabelled_data(self.XGBmodels_list[mm])
+        
         
             toc = time.perf_counter() 
             self.elapse_xgb.append(toc-tic)
@@ -269,9 +269,8 @@ class CSA(Pseudo_Labeling):
                 print("#augmented:", self.num_augmented_per_class, " len of training data ", len(y))
             
                         
-        # evaluate at the last iteration for reporting purpose
-        self.model.fit(X, y.ravel())
+        # evaluate_performance at the last iteration for reporting purpose
+        self.model.fit(X, y)
 
-        self.evaluate()  
-        return self.test_acc
+        self.evaluate_performance()  
     

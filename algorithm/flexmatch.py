@@ -26,73 +26,73 @@ from .pseudo_labeling import Pseudo_Labeling
 class FlexMatch(Pseudo_Labeling):
     # adaptive thresholding
     
-    def __init__(self, unlabelled_data, x_test,y_test,num_iters=5,upper_threshold = 0.9, verbose = False):
-        super().__init__( unlabelled_data, x_test,y_test,num_iters=num_iters,upper_threshold=upper_threshold,verbose=verbose)
+    def __init__(self, unlabelled_data, x_test,y_test,num_iters=5,upper_threshold = 0.9, verbose = False,IsMultiLabel=False):
+        super().__init__( unlabelled_data, x_test,y_test,num_iters=num_iters,upper_threshold=upper_threshold,verbose=verbose,IsMultiLabel=IsMultiLabel)
+        
         self.algorithm_name="FlexMatch"
     def predict(self, X):
         super().predict(X)
     def predict_proba(self, X):
         super().predict_proba(X)
-    def evaluate(self):
-        super().evaluate()
+    def evaluate_performance(self):
+        super().evaluate_performance()
     def get_max_pseudo_point(self,class_freq,current_iter):
         return super().get_max_pseudo_point(class_freq,current_iter)
     def fit(self, X, y):
         print("=====",self.algorithm_name)
-        self.nClass=len(np.unique(y))
-        if len(np.unique(y)) < len(np.unique(self.y_test)):
-            print("num class in training data is less than test data !!!")
-            
-        self.num_augmented_per_class=[0]*self.nClass
+        
+        self.nClass=self.get_number_of_labels(y)
+
         
         self.label_frequency=self.estimate_label_frequency(y)
 
         for current_iter in (tqdm(range(self.num_iters)) if self.verbose else range(self.num_iters)):
 
             # Fit to data
-            self.model.fit(X, y.ravel())
+            self.model.fit(X, y)
             
-            self.evaluate()
+            self.evaluate_performance()
 
             # estimate prob using unlabelled data
-            pseudo_labels_prob = self.model.predict_proba(self.unlabelled_data)
-            
-            num_points=pseudo_labels_prob.shape[0]        
+            pseudo_labels_prob=self.get_predictive_prob_for_unlabelled_data(self.model)
+
             
             #go over each row (data point), only keep the argmax prob
-            max_prob=[0]*num_points
+            # max_prob=[0]*num_points
             
-            max_prob_matrix=np.zeros((pseudo_labels_prob.shape))
-            for ii in range(num_points): 
-                idxMax=np.argmax(pseudo_labels_prob[ii,:])
+            # max_prob_matrix=np.zeros((pseudo_labels_prob.shape))
+            # for ii in range(num_points): 
+            #     idxMax=np.argmax(pseudo_labels_prob[ii,:])
                 
-                max_prob_matrix[ii,idxMax]=pseudo_labels_prob[ii,idxMax]
-                max_prob[ii]=pseudo_labels_prob[ii,idxMax]
+            #     max_prob_matrix[ii,idxMax]=pseudo_labels_prob[ii,idxMax]
+            #     max_prob[ii]=pseudo_labels_prob[ii,idxMax]
         
         
             # for each class, count the number of points > threshold
-            countVector=[0]*self.nClass
-            for cc in range(self.nClass):
-                idx_above_threshold=np.where(max_prob_matrix[:,cc]>self.upper_threshold)[0]
-                countVector[cc]= len( idx_above_threshold ) # count number of unlabeled data above the threshold
-            countVector_normalized=np.asarray(countVector)/np.max(countVector)
+            # countVector=[0]*self.nClass
+            # for cc in range(self.nClass):
+            #     idx_above_threshold=np.where(max_prob_matrix[:,cc]>self.upper_threshold)[0]
+            #     countVector[cc]= len( idx_above_threshold ) # count number of unlabeled data above the threshold
+            # countVector_normalized=np.asarray(countVector)/np.max(countVector)
             
-            if self.verbose:
-                print("class threshold:", np.round(countVector_normalized*self.upper_threshold,2))
+            # if self.verbose:
+            #     print("class threshold:", np.round(countVector_normalized*self.upper_threshold,2))
             
-            augmented_idx=[]
-            for cc in range(self.nClass):
-                # compute the adaptive threshold for each class
-                class_upper_thresh=countVector_normalized[cc]*self.upper_threshold
+            X,y=self.label_assignment_and_post_processing_FlexMatch( pseudo_labels_prob,X,y, current_iter=0)
 
-                MaxPseudoPoint=self.get_max_pseudo_point(self.label_frequency[cc],current_iter)
-                idx_sorted = np.argsort( max_prob_matrix[:,cc])[::-1][:MaxPseudoPoint] # decreasing        
+            # augmented_idx=[]
+            # for cc in range(self.nClass):
+            #     # compute the adaptive threshold for each class
+            #     class_upper_thresh=countVector_normalized[cc]*self.upper_threshold
 
-                idx_above_threshold = np.where(max_prob_matrix[idx_sorted,cc] > class_upper_thresh)[0]
-                labels_within_threshold= idx_sorted[idx_above_threshold]
-                augmented_idx += labels_within_threshold.tolist()
+            #     MaxPseudoPoint=self.get_max_pseudo_point(self.label_frequency[cc],current_iter)
+            #     idx_sorted = np.argsort( max_prob_matrix[:,cc])[::-1][:MaxPseudoPoint] # decreasing        
 
-                X,y = self.post_processing(cc,labels_within_threshold,X,y)
+            #     idx_above_threshold = np.where(max_prob_matrix[idx_sorted,cc] > class_upper_thresh)[0]
+            #     labels_within_threshold= idx_sorted[idx_above_threshold]
+            #     augmented_idx += labels_within_threshold.tolist()
+
+            #     X,y = self.post_processing(cc,labels_within_threshold,X,y)
                 
                 
                 
@@ -101,16 +101,15 @@ class FlexMatch(Pseudo_Labeling):
           
 
             if np.sum(self.num_augmented_per_class)==0: # no data point is augmented
-                return self.test_acc
+                return #self.test_acc
                 
             # remove the selected data from unlabelled data
-            self.unlabelled_data = np.delete(self.unlabelled_data, np.unique(augmented_idx), 0)
+            #self.unlabelled_data = np.delete(self.unlabelled_data, np.unique(augmented_idx), 0)
                 
-        # evaluate at the last iteration for reporting purpose
-        self.model.fit(X, y.ravel())
+        # evaluate_performance at the last iteration for reporting purpose
+        self.model.fit(X, y)
 
-        self.evaluate()
-        return self.test_acc
+        self.evaluate_performance()
     
 
     

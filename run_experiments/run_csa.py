@@ -15,6 +15,8 @@ from confident_sinkhorn_allocation.algorithm.csa import CSA
 
 
 from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled,append_acc_early_termination
+from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled_for_multilabel_classification
+
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -29,7 +31,13 @@ def run_experiments(args, save_dir):
     dataset_name=args.dataset_name
     num_XGB_models=args.numXGBs
 
-    #logging.info(algorithm_params)
+    
+    IsMultiLabel=False # by default
+
+    # in our list of datasets: ['yeast','emotions'] are multi-label classification dataset
+    # the rest are multiclassification
+    if dataset_name in ['yeast','emotions']: # multi-label
+        IsMultiLabel=True
 
     accuracy = []
 
@@ -41,13 +49,17 @@ def run_experiments(args, save_dir):
         #                                    _datasetName,dataset_index=ii,random_state=tt)
 
         # load the data        
-        x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,random_state=tt)
+        if IsMultiLabel==False: # multiclassification
+            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,random_state=tt)
+        else: # multi-label classification
+            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled_for_multilabel_classification(dataset_name,random_state=tt)
         
         pseudo_labeller = CSA(x_unlabeled,x_test,y_test, 
                 num_iters=numIters,
                 confidence_choice=confidence_choice,
                 num_XGB_models=num_XGB_models,
-                verbose = 0
+                verbose = 0,
+                IsMultiLabel=IsMultiLabel
             )
         pseudo_labeller.fit(x_train, y_train)
         
@@ -93,8 +105,8 @@ if __name__ == '__main__':
     parser.add_argument('--numTrials', type=int, default=20, help ='number of Trials (Repeated Experiments)' )
     parser.add_argument('--numXGBs', type=int, default=10, help ='number of XGB models, M=?' )
     parser.add_argument('--confidence_choice', type=str, default='ttest', help ='confidence choices: ttest | variance | entropy | none' )
-    parser.add_argument('--dataset_name', type=str, default='segment_2310_20', help='segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
-        German-credit |  madelon_no | dna_no | agaricus-lepiota | breast_cancer | digits')
+    parser.add_argument('--dataset_name', type=str, default='emotions', help='segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
+        German-credit |  madelon_no | dna_no | agaricus-lepiota | breast_cancer | digits | yeast | emotions')
     parser.add_argument('--verbose', type=str, default='No', help='verbose Yes or No')
     parser.add_argument('--output_filename', type=str, default='', help='name of output files')
     parser.add_argument('--save_dir', type=str, default='results_output', help='name of save directory')
