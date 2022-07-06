@@ -180,12 +180,12 @@ def get_train_test_unlabeled_for_multilabel_classification(_datasetName,random_s
         
         x_train, x_unlabeled, y_train, y_unlabeled = train_test_split(x_train, y_train, 
                                                         test_size=0.5, random_state=random_state)
-    elif _datasetName=="yeast": # genbase dataset
+    elif _datasetName=="genbase": # genbase dataset
         x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.1, random_state=random_state)
         
         x_train, x_unlabeled, y_train, y_unlabeled = train_test_split(x_train, y_train, 
                                                         test_size=0.7, random_state=random_state)
-    elif _datasetName=="emotions": # yeast dataset
+    elif _datasetName=="yeast": # yeast dataset
         x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.3, random_state=random_state)
         
         x_train, x_unlabeled, y_train, y_unlabeled = train_test_split(x_train, y_train, 
@@ -200,8 +200,4 @@ def get_train_test_unlabeled_for_multilabel_classification(_datasetName,random_s
     p = np.random.permutation(x_unlabeled.shape[0])
     x_unlabeled, y_unlabeled = x_unlabeled[p], y_unlabeled[p]
     
-    #y_test=np.reshape(y_test,(-1,1))
-    #y_train=np.reshape(y_train,(-1,1))
-
-
     return x_train,y_train, x_test, y_test, x_unlabeled

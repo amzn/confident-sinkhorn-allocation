@@ -100,7 +100,7 @@ def load_corel5k_multilabel(folder):
 path ='./vector_data/'
 
 all_data=[]
-_datasetName=['emotions','yeast','genbase']
+_datasetName=['yeast','emotions','genbase']
 all_data.append(load_yeast_multilabel(path))
 all_data.append(load_emotions_multilabel(path))
 all_data.append(load_genbase_multilabel(path))

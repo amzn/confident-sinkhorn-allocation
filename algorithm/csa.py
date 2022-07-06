@@ -238,6 +238,7 @@ class CSA(Pseudo_Labeling):
             # because a single data point can be assigned to multiple classes
             max_prob_matrix=pseudo_labels_prob
 
+        assignment_matrix=self.get_prob_at_max_class(assignment_matrix)
 
         assigned_pseudo_labels=np.zeros((max_prob_matrix.shape[0],self.nClass)).astype(int)
 
@@ -246,7 +247,7 @@ class CSA(Pseudo_Labeling):
 
             MaxPseudoPoint[cc]=self.get_max_pseudo_point(self.label_frequency[cc],current_iter)
             
-            idx_sorted = np.argsort( max_prob_matrix[:,cc])[::-1] # decreasing        
+            idx_sorted = np.argsort( assignment_matrix[:,cc])[::-1] # decreasing        
 
             idx_assignment = np.where(assignment_matrix[idx_sorted,cc] > 0 )[0]   
 
@@ -343,6 +344,10 @@ class CSA(Pseudo_Labeling):
             idxNoneZero=np.where( confidence>0 )[0]
             #idxNoneZero=np.where( (confidence>0) & (confidence<0.9*np.max(confidence)) )[0]
             num_points= len(idxNoneZero)
+
+            if self.verbose:
+                print("num_points accepted= ",num_points, " total num_points=",len(self.unlabelled_data))
+
             if len(idxNoneZero)==0: # terminate if could not find any point satisfying constraints
                 return self.test_acc
             

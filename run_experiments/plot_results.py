@@ -47,9 +47,10 @@ if dataset_name in ['yeast','emotions']: # multi-label
 
 # load the data        
 if IsMultiLabel==False: # multiclassification
-    x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,random_state=0)
+    x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,path_to_data='all_data.pickle',random_state=0)
 else: # multi-label classification
     x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled_for_multilabel_classification(dataset_name,random_state=0)
+    confidence='variance' # for CSA 
 
 
 
