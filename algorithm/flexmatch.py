@@ -53,20 +53,20 @@ class FlexMatch(Pseudo_Labeling):
         return super().get_max_pseudo_point(class_freq,current_iter)
 
     def label_assignment_and_post_processing_FlexMatch(self, pseudo_labels_prob,X,y, current_iter=0,upper_threshold=None):
-    """
-    Given the threshold, perform label assignments and augmentation
-    This function is particular for FlexMatch
-    Args:
-        pseudo_labels_prob: predictive prob [N x K] where N is #unlabels, K is #class
-        X: existing pseudo_labeled + labeled data [ N' x d ]
-        y: existing pseudo_labeled + labeled data [ N' x 1 ] for multiclassification
-        y: existing pseudo_labeled + labeled data [ N' x K ] for multilabel classification
+        """
+        Given the threshold, perform label assignments and augmentation
+        This function is particular for FlexMatch
+        Args:
+            pseudo_labels_prob: predictive prob [N x K] where N is #unlabels, K is #class
+            X: existing pseudo_labeled + labeled data [ N' x d ]
+            y: existing pseudo_labeled + labeled data [ N' x 1 ] for multiclassification
+            y: existing pseudo_labeled + labeled data [ N' x K ] for multilabel classification
 
-    Output:
-        Augmented X = augmented_X + X
-        Augmented y = augmented_y + Y
-    """
-    
+        Output:
+            Augmented X = augmented_X + X
+            Augmented y = augmented_y + Y
+        """
+        
     if self.IsMultiLabel==False:
         #go over each row (data point), only keep the argmax prob 
         # because we only allow a single data point to a single class
