@@ -162,10 +162,13 @@ def get_train_test_unlabeled(_datasetName,path_to_data,random_state=0): # for mu
     return x_train,y_train, x_test, y_test, x_unlabeled
 
 
-def get_train_test_unlabeled_for_multilabel_classification(_datasetName,random_state=0): # for multi-label classification
-    
+def get_train_test_unlabeled_for_multilabel_classification(_datasetName,path_to_data='all_data_multilabel.pickle',random_state=0): # for multi-label classification
+    """
+    path_to_data='all_data.pickle'
+    """
+
     # load the data
-    with open('all_data_multilabel.pickle', 'rb') as handle:
+    with open(path_to_data, 'rb') as handle:
         [all_data, datasetName_list] = pickle.load(handle)
 
     dataset_index= datasetName_list.index(_datasetName)
