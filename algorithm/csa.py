@@ -45,7 +45,7 @@ class CSA(Pseudo_Labeling):
                 self.confidence_choice="variance"
 
 
-        self.algorithm_name="CSA_" + confidence_choice
+        self.algorithm_name="CSA_" + self.confidence_choice
 
 
         
@@ -212,7 +212,54 @@ class CSA(Pseudo_Labeling):
             
         return t_test
     
+    def label_assignment_and_post_processing_for_CSA(self, assignment_matrix,pseudo_labels_prob,X,y, current_iter=0):
+        """
+        Given the threshold, we perform label assignment and post-processing
 
+        Args:
+            pseudo_labels_prob: predictive prob [N x K] where N is #unlabels, K is #class
+            X: existing pseudo_labeled + labeled data [ N' x d ]
+            y: existing pseudo_labeled + labeled data [ N' x 1 ] for multiclassification
+            y: existing pseudo_labeled + labeled data [ N' x K ] for multilabel classification
+
+        Output:
+            Augmented X = augmented_X + X
+            Augmented y = augmented_y + Y
+        """
+        
+        if self.IsMultiLabel==False:
+            #go over each row (data point), only keep the argmax prob 
+            # because we only allow a single data point to a single class
+            max_prob_matrix=self.get_prob_at_max_class(pseudo_labels_prob)
+        else:
+            # we dont need to get prob at max class for multi-label
+            # because a single data point can be assigned to multiple classes
+            max_prob_matrix=pseudo_labels_prob
+
+
+        assigned_pseudo_labels=np.zeros((max_prob_matrix.shape[0],self.nClass)).astype(int)
+
+        MaxPseudoPoint=[0]*self.nClass
+        for cc in range(self.nClass): # loop over each class
+
+            MaxPseudoPoint[cc]=self.get_max_pseudo_point(self.label_frequency[cc],current_iter)
+            
+            idx_sorted = np.argsort( max_prob_matrix[:,cc])[::-1] # decreasing        
+
+            idx_assignment = np.where(assignment_matrix[idx_sorted,cc] > 0 )[0]   
+
+            # we dont accept labels with less than 0.5 prediction, this works well for multilabel classification
+            idx_satisfied = np.where(pseudo_labels_prob[idx_sorted[idx_assignment],cc] > 0.5 )[0]  
+
+            # only select upto MaxPseudoPoint[cc] points  
+            labels_satisfied_threshold=idx_sorted[idx_satisfied][:MaxPseudoPoint[cc]] 
+
+            assigned_pseudo_labels[labels_satisfied_threshold, cc]=1
+
+        if self.verbose:
+            print("MaxPseudoPoint",MaxPseudoPoint)
+        
+        return self.post_processing_and_augmentation(assigned_pseudo_labels,X,y)
 
     def fit(self, X, y):
         """
@@ -356,7 +403,7 @@ class CSA(Pseudo_Labeling):
             assignment_matrix_Q=np.zeros((pseudo_labels_prob.shape))
             assignment_matrix_Q[idxNoneZero,:]=Q_prime[:-1,:-1]
             
-            X,y=self.label_assignment_and_post_processing(assignment_matrix_Q,X,y,current_iter) 
+            X,y=self.label_assignment_and_post_processing_for_CSA(assignment_matrix_Q,pseudo_labels_prob,X,y,current_iter) 
  
             if self.verbose:
                 print("#augmented:", self.num_augmented_per_class, " len of training data ", len(y))
