@@ -67,55 +67,55 @@ class FlexMatch(Pseudo_Labeling):
             Augmented y = augmented_y + Y
         """
         
-    if self.IsMultiLabel==False:
-        #go over each row (data point), only keep the argmax prob 
-        # because we only allow a single data point to a single class
-        max_prob_matrix=self.get_prob_at_max_class(pseudo_labels_prob)
-    else:
-        # we dont need to get prob at max class for multi-label
-        # because a single data point can be assigned to multiple classes
-        max_prob_matrix=pseudo_labels_prob
+        if self.IsMultiLabel==False:
+            #go over each row (data point), only keep the argmax prob 
+            # because we only allow a single data point to a single class
+            max_prob_matrix=self.get_prob_at_max_class(pseudo_labels_prob)
+        else:
+            # we dont need to get prob at max class for multi-label
+            # because a single data point can be assigned to multiple classes
+            max_prob_matrix=pseudo_labels_prob
 
 
-    # for each class, count the number of points > threshold
-    # this is the technique used in FlexMatch
-    countVector=[0]*self.nClass
-    for cc in range(self.nClass):
-        temp=np.where(max_prob_matrix[:,cc]>self.upper_threshold)[0]
-        countVector[cc]= len( temp )
-    countVector_normalized=np.asarray(countVector)/np.max(countVector)
-    
-
-    if upper_threshold is None:
-        upper_threshold=self.upper_threshold
+        # for each class, count the number of points > threshold
+        # this is the technique used in FlexMatch
+        countVector=[0]*self.nClass
+        for cc in range(self.nClass):
+            temp=np.where(max_prob_matrix[:,cc]>self.upper_threshold)[0]
+            countVector[cc]= len( temp )
+        countVector_normalized=np.asarray(countVector)/np.max(countVector)
         
 
-    # assign labels if the prob > threshold ========================================================
-    assigned_pseudo_labels=np.zeros((max_prob_matrix.shape[0],self.nClass)).astype(int)
-    MaxPseudoPoint=[0]*self.nClass
-    for cc in range(self.nClass): # loop over each class
+        if upper_threshold is None:
+            upper_threshold=self.upper_threshold
+            
 
-        # note that in FlexMatch, the upper_threshold is updated below before using as the threshold
-        flex_class_upper_thresh=countVector_normalized[cc]*self.upper_threshold
+        # assign labels if the prob > threshold ========================================================
+        assigned_pseudo_labels=np.zeros((max_prob_matrix.shape[0],self.nClass)).astype(int)
+        MaxPseudoPoint=[0]*self.nClass
+        for cc in range(self.nClass): # loop over each class
 
-        # obtain the maximum number of points can be assigned per class
-        MaxPseudoPoint[cc]=self.get_max_pseudo_point(self.label_frequency[cc],current_iter)
+            # note that in FlexMatch, the upper_threshold is updated below before using as the threshold
+            flex_class_upper_thresh=countVector_normalized[cc]*self.upper_threshold
+
+            # obtain the maximum number of points can be assigned per class
+            MaxPseudoPoint[cc]=self.get_max_pseudo_point(self.label_frequency[cc],current_iter)
+            
+            idx_sorted = np.argsort( max_prob_matrix[:,cc])[::-1] # decreasing        
+
+            temp_idx = np.where(max_prob_matrix[idx_sorted,cc] > flex_class_upper_thresh )[0]   
+            labels_satisfied_threshold=idx_sorted[temp_idx]
+
+            # only select upto MaxPseudoPoint[cc] points
+            labels_satisfied_threshold = labels_satisfied_threshold[:MaxPseudoPoint[cc]] 
+            assigned_pseudo_labels[labels_satisfied_threshold, cc]=1
+
+
+        if self.verbose:
+            print("MaxPseudoPoint",MaxPseudoPoint)
         
-        idx_sorted = np.argsort( max_prob_matrix[:,cc])[::-1] # decreasing        
-
-        temp_idx = np.where(max_prob_matrix[idx_sorted,cc] > flex_class_upper_thresh )[0]   
-        labels_satisfied_threshold=idx_sorted[temp_idx]
-
-        # only select upto MaxPseudoPoint[cc] points
-        labels_satisfied_threshold = labels_satisfied_threshold[:MaxPseudoPoint[cc]] 
-        assigned_pseudo_labels[labels_satisfied_threshold, cc]=1
-
-
-    if self.verbose:
-        print("MaxPseudoPoint",MaxPseudoPoint)
-    
-    # post-processing and augmenting the data into X and Y ==========================================
-    return self.post_processing_and_augmentation(assigned_pseudo_labels,X,y)
+        # post-processing and augmenting the data into X and Y ==========================================
+        return self.post_processing_and_augmentation(assigned_pseudo_labels,X,y)
 
 
 
