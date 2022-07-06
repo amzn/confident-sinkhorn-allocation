@@ -44,8 +44,10 @@ class CSA(Pseudo_Labeling):
             if self.confidence_choice is not None:
                 self.confidence_choice="variance"
 
-
-        self.algorithm_name="CSA_" + self.confidence_choice
+        if self.confidence_choice is None:
+            self.algorithm_name="SLA"
+        else:
+            self.algorithm_name="CSA_" + self.confidence_choice
 
 
         

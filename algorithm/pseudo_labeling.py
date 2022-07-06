@@ -194,7 +194,8 @@ class Pseudo_Labeling(object):
         if self.IsMultiLabel==False:
             test_acc= np.round( accuracy_score(y_test_pred, self.y_test)*100, 2)# round to 2 digits xx.yy %
 
-            print('+++Test Acc: {:.2f}%'.format(test_acc))
+            if self.verbose:
+                print('+++Test Acc: {:.2f}%'.format(test_acc))
             self.test_acc +=[test_acc]
         else: # multi-label classification
 
@@ -204,7 +205,8 @@ class Pseudo_Labeling(object):
 
             self.test_acc +=[prec] # precision score
 
-            print('+++Test Acc: {:.2f}%'.format(prec))
+            if self.verbose:
+                print('+++Test Acc: {:.2f}%'.format(prec))
 
 
     def get_prob_at_max_class(self,pseudo_labels_prob):
@@ -317,7 +319,8 @@ class Pseudo_Labeling(object):
             labels_satisfied_threshold = labels_satisfied_threshold[:MaxPseudoPoint[cc]] 
             assigned_pseudo_labels[labels_satisfied_threshold, cc]=1
 
-        print("MaxPseudoPoint",MaxPseudoPoint)
+        if self.verbose:
+            print("MaxPseudoPoint",MaxPseudoPoint)
         
         return self.post_processing_and_augmentation(assigned_pseudo_labels,X,y)
 
