@@ -177,8 +177,6 @@ class Pseudo_Labeling(object):
     
         return label_frequency/np.sum(label_frequency)
 
-
-    
     
         
     def evaluate_performance(self):

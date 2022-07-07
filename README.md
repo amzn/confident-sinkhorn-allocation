@@ -1,14 +1,52 @@
 # Confident Sinkhorn Allocation for Pseudo-Labeling
-https://arxiv.org/pdf/2206.05880.pdf
 
-# Run the experiments
+[![Paper](http://img.shields.io/badge/paper-arxiv.2206.05880-B31B1B.svg)](https://arxiv.org/pdf/2206.05880.pdf)
 
-## Multi classification
+# Installations
+```
+pip install -r requirements.txt
+```
 
-## Multi-label classification
+or
+
+```
+!pip install git+https://github.com/ntienvu/confident_sinkhorn_allocation
+```
+
+* colorama==0.4.5
+* cycler==0.11.0
+* fonttools==4.33.3
+* joblib==1.1.0
+* kiwisolver==1.4.3
+* matplotlib==3.5.2
+* numpy==1.23.0
+* packaging==21.3
+* pandas==1.4.3
+* Pillow==9.2.0
+* pyparsing==3.0.9
+* python-dateutil==2.8.2
+* pytz==2022.1
+* scikit-learn==1.1.1
+* scipy==1.8.1
+* six==1.16.0
+* threadpoolctl==3.1.0
+* tqdm==4.64.0
+* xgboost==1.6.1
+
 
 
 # Run the experiments with Colab
+
+# Reproduce the experiments
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Miq659eCRpbH0qzLjGWxbSbhZQmwx_lM#scrollTo=tubZzNQc3EFg)
+
+## Demo Confident Sinkhorn Allocation for Multiclassification
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ntienvu/confident_sinkhorn_allocation/blob/master/demo_ConfidentSinkhornAllocation.ipynb)
+
+
+## Demo Confident Sinkhorn Allocation for Multilabel Classification
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1z9_ijDdqHNqNah6olqpMUkh8F15kpu5G#scrollTo=j-JijnqQbdmC)
+
 
 # Plot results
 
