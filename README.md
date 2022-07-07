@@ -1,6 +1,11 @@
+<div align="center">
+
+
 # Confident Sinkhorn Allocation for Pseudo-Labeling
 
 [![Paper](http://img.shields.io/badge/paper-arxiv.2206.05880-B31B1B.svg)](https://arxiv.org/pdf/2206.05880.pdf)
+
+</div>
 
 # Installations
 ```
@@ -12,6 +17,7 @@ or
 ```
 !pip install git+https://github.com/ntienvu/confident_sinkhorn_allocation
 ```
+## Packages
 
 * colorama==0.4.5
 * cycler==0.11.0
@@ -71,9 +77,11 @@ or
 python plot_results.py
 ```
 
-# All dataset is collected from UCI and stored in all_data.pickle
+# All datasets are from UCI:
 
-> we can load all data with their datasetName as follows:
+## Datasets for multiclassification
+
+> we can load all datasets for multiclassification with their datasetName as follows:
 ```
 with open('all_data.pickle', 'rb') as handle:
     [all_data, datasetName_list] = pickle.load(handle)
@@ -90,6 +98,16 @@ with open('all_data.pickle', 'rb') as handle:
 * agaricus-lepiota
 * breast_cancer
 * digits
+
+## Datasets for multilabel classification
+```
+with open('all_data_multilabel.pickle', 'rb') as handle:
+    [all_data, datasetName_list] = pickle.load(handle)
+```
+
+* yeast
+* emotions
+
 
 ## Credits and References:
 
