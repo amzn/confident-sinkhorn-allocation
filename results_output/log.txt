@@ -117,3 +117,4 @@
 2022-07-07 20:49:23,663 Namespace(dataset_name='German-credit', lower_threshold=0.2, numIters=5, numTrials=20, numXGBs=10, output_filename='', save_dir='results_output', upper_threshold=0.8, verbose='No')
 2022-07-07 20:55:20,198 Namespace(confidence_choice='ttest', dataset_name='German-credit', numIters=5, numTrials=20, numXGBs=10, output_filename='', save_dir='results_output', verbose='True')
 2022-07-07 21:14:51,652 Namespace(dataset_name='German-credit', lower_threshold=0.2, numIters=5, numTrials=20, numXGBs=10, output_filename='', save_dir='results_output', upper_threshold=0.8, verbose='No')
+2022-07-07 21:16:24,239 Namespace(dataset_name='German-credit', lower_threshold=0.2, numIters=5, numTrials=20, numXGBs=10, output_filename='', save_dir='results_output', upper_threshold=0.8, verbose='No')
