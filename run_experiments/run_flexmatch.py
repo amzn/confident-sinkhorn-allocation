@@ -15,7 +15,7 @@ from confident_sinkhorn_allocation.algorithm.flexmatch import FlexMatch
 
 
 from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled,append_acc_early_termination
-from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled_for_multilabel_classification
+from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled_for_multilabel
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -43,9 +43,9 @@ def run_experiments(args, save_dir):
        
         # load the data        
         if IsMultiLabel==False: # multiclassification
-            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,random_state=tt)
+            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,path_to_data='all_data.pickle',random_state=tt)
         else: # multi-label classification
-            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled_for_multilabel_classification(dataset_name,random_state=tt)
+            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled_for_multilabel(dataset_name,path_to_data='all_data_multilabel.pickle',random_state=tt)
         
         pseudo_labeller = FlexMatch(x_unlabeled,x_test,y_test, 
                 num_iters=numIters,
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     parser.add_argument('--numIters', type=int, default=5, help='number of Pseudo Iterations')
     parser.add_argument('--numTrials', type=int, default=20, help ='number of Trials (Repeated Experiments)' )
     parser.add_argument('--upper_threshold', type=float, default=0.8, help ='threshold in pseudo-labeling' )
-    parser.add_argument('--dataset_name', type=str, default='emotions', help='segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
+    parser.add_argument('--dataset_name', type=str, default='German-credit', help='segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
         German-credit |  madelon_no | dna_no | agaricus-lepiota | breast_cancer | digits | yeast | emotions')
 
     parser.add_argument('--verbose', type=str, default='No', help='verbose Yes or No')

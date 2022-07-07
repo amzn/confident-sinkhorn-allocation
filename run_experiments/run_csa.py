@@ -15,7 +15,7 @@ from confident_sinkhorn_allocation.algorithm.csa import CSA
 
 
 from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled,append_acc_early_termination
-from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled_for_multilabel_classification
+from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled_for_multilabel
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -45,14 +45,12 @@ def run_experiments(args, save_dir):
     for tt in tqdm(range(numTrials)):
         
         np.random.seed(tt)
-        # x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled_data(all_data, \
-        #                                    _datasetName,dataset_index=ii,random_state=tt)
-
+             
         # load the data        
         if IsMultiLabel==False: # multiclassification
-            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,random_state=tt)
+            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,path_to_data='all_data.pickle',random_state=tt)
         else: # multi-label classification
-            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled_for_multilabel_classification(dataset_name,random_state=tt)
+            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled_for_multilabel(dataset_name,path_to_data='all_data_multilabel.pickle',random_state=tt)
         
         pseudo_labeller = CSA(x_unlabeled,x_test,y_test, 
                 num_iters=numIters,
@@ -105,7 +103,7 @@ if __name__ == '__main__':
     parser.add_argument('--numTrials', type=int, default=20, help ='number of Trials (Repeated Experiments)' )
     parser.add_argument('--numXGBs', type=int, default=10, help ='number of XGB models, M=?' )
     parser.add_argument('--confidence_choice', type=str, default='ttest', help ='confidence choices: ttest | variance | entropy | None' )
-    parser.add_argument('--dataset_name', type=str, default='emotions', help='segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
+    parser.add_argument('--dataset_name', type=str, default='German-credit', help='segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
         German-credit |  madelon_no | dna_no | agaricus-lepiota | breast_cancer | digits | yeast | emotions')
     parser.add_argument('--verbose', type=str, default='True', help='verbose True or False')
     parser.add_argument('--output_filename', type=str, default='', help='name of output files')

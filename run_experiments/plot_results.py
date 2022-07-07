@@ -11,7 +11,7 @@ from confident_sinkhorn_allocation.algorithm.pseudo_labeling import Pseudo_Label
 from confident_sinkhorn_allocation.algorithm.flexmatch import FlexMatch
 from confident_sinkhorn_allocation.algorithm.ups import UPS
 from confident_sinkhorn_allocation.algorithm.csa import CSA
-from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled,get_train_test_unlabeled_for_multilabel_classification
+from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled,get_train_test_unlabeled_for_multilabel
 
 import pickle
 
@@ -30,7 +30,7 @@ save_dir = 'results_output' # path to the folder store the results
 out_file='' 
 numTrials=20 # number of repeated trials
 numIters=5 # number of used pseudo-iterations
-dataset_name='emotions' #segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
+dataset_name='German-credit' #segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
         #German-credit |  madelon_no | dna_no | agaricus-lepiota | breast_cancer | digits | emotions
 list_algorithms=['Pseudo_Labeling','FlexMatch','UPS','CSA'] # list of algorithms to be plotted
 
@@ -47,9 +47,10 @@ if dataset_name in ['yeast','emotions']: # multi-label
 
 # load the data        
 if IsMultiLabel==False: # multiclassification
-    x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,path_to_data='all_data.pickle',random_state=0)
+            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,path_to_data='all_data.pickle',random_state=0)
 else: # multi-label classification
-    x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled_for_multilabel_classification(dataset_name,random_state=0)
+    x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled_for_multilabel(dataset_name,path_to_data='all_data_multilabel.pickle',random_state=0)
+
     confidence='variance' # for CSA 
 
 
