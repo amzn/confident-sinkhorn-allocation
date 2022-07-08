@@ -18,7 +18,7 @@ or
 !pip install git+https://github.com/ntienvu/confident_sinkhorn_allocation
 ```
 ## Packages
-
+```
 * colorama==0.4.5
 * cycler==0.11.0
 * fonttools==4.33.3
@@ -38,7 +38,7 @@ or
 * threadpoolctl==3.1.0
 * tqdm==4.64.0
 * xgboost==1.6.1
-
+```
 
 
 # Run the experiments with Colab
