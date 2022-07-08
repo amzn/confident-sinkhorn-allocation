@@ -103,7 +103,7 @@ if __name__ == '__main__':
     parser.add_argument('--numTrials', type=int, default=20, help ='number of Trials (Repeated Experiments)' )
     parser.add_argument('--numXGBs', type=int, default=10, help ='number of XGB models, M=?' )
     parser.add_argument('--confidence_choice', type=str, default='ttest', help ='confidence choices: ttest | variance | entropy | None' )
-    parser.add_argument('--dataset_name', type=str, default='German-credit', help='segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
+    parser.add_argument('--dataset_name', type=str, default='wdbc_569_31', help='segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
         German-credit |  madelon_no | dna_no | agaricus-lepiota | breast_cancer | digits | yeast | emotions')
     parser.add_argument('--verbose', type=str, default='True', help='verbose True or False')
     parser.add_argument('--output_filename', type=str, default='', help='name of output files')
