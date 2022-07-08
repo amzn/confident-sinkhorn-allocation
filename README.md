@@ -41,37 +41,37 @@ or
 ```
 
 
-# Run the experiments with Colab
-
-# Reproduce the experiments
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Miq659eCRpbH0qzLjGWxbSbhZQmwx_lM#scrollTo=tubZzNQc3EFg)
-
-## Demo Confident Sinkhorn Allocation for Multiclassification
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ntienvu/confident_sinkhorn_allocation/blob/master/demo_ConfidentSinkhornAllocation.ipynb)
 
 
-## Demo Confident Sinkhorn Allocation for Multilabel Classification
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1z9_ijDdqHNqNah6olqpMUkh8F15kpu5G#scrollTo=j-JijnqQbdmC)
+## Reproduce the experiments in Colab [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Miq659eCRpbH0qzLjGWxbSbhZQmwx_lM#scrollTo=tubZzNQc3EFg)
+
+## Demo Confident Sinkhorn Allocation for Multiclassification in Colab [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ntienvu/confident_sinkhorn_allocation/blob/master/demo_ConfidentSinkhornAllocation.ipynb)
+
+
+## Demo Confident Sinkhorn Allocation for Multilabel Classification in Colab [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1z9_ijDdqHNqNah6olqpMUkh8F15kpu5G#scrollTo=j-JijnqQbdmC)
+
+# Run single experiment
+
 
 
 # Plot results
 
 > Please specify the following parameters. These parameters will link to the correct files in your result folders
-
+```
 * save_dir = 'results_output' # path to the folder store the results 
 * out_file='' # change this if you have set it when running the experiments 
 * numTrials=20 # number of repeated trials
 * numIters=5 # number of used pseudo-iterations
 * dataset_name='madelon_no' # datasets
 * list_algorithms=['Pseudo_Labeling','FlexMatch','UPS','CSA'] # list of algorithms to be plotted
-
+```
 > the following parameters to be used to load the correct paths
-
+```
 * confidence='ttest' # only used for CSA 
 * upper_threshold=0.8 # only used for Pseudo_Labeling,FlexMatch
 * low_threshold=0.2 # only used for UPS
 * num_XGB_models=10 # only used for CSA and UPS
-
+```
 
 ```
 python plot_results.py
@@ -88,6 +88,7 @@ with open('all_data.pickle', 'rb') as handle:
 ```
 
 > List of all datasets
+```
 * segment_2310_20
 * wdbc_569_31
 * analcatdata_authorship
@@ -97,6 +98,7 @@ with open('all_data.pickle', 'rb') as handle:
 * agaricus-lepiota
 * breast_cancer
 * digits
+```
 
 ## Datasets for multilabel classification
 ```
@@ -104,9 +106,10 @@ with open('all_data_multilabel.pickle', 'rb') as handle:
     [all_data, datasetName_list] = pickle.load(handle)
 ```
 
+```
 * yeast
 * emotions
-
+```
 
 ## Credits and References:
 
