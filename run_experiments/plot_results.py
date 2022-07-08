@@ -34,8 +34,8 @@ numIters=5 # number of used pseudo-iterations
 #====================================================================
 # list of datasets 
 #segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
-        #German-credit |  madelon_no | dna_no | agaricus-lepiota | breast_cancer | digits | emotions
-dataset_name='wdbc_569_31' 
+        #German-credit |  madelon_no | agaricus-lepiota | breast_cancer | digits | emotions | yeast
+dataset_name='synthetic_control_6c' 
 
 
 

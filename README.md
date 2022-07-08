@@ -94,7 +94,6 @@ with open('all_data.pickle', 'rb') as handle:
 * synthetic_control_6c
 * German-credit
 * madelon_no
-* dna_no
 * agaricus-lepiota
 * breast_cancer
 * digits

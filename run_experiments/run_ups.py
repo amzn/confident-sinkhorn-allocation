@@ -106,8 +106,8 @@ if __name__ == '__main__':
     parser.add_argument('--numXGBs', type=int, default=10, help ='number of XGB models, M=?' )
     parser.add_argument('--upper_threshold', type=float, default=0.8, help ='upper threshold in pseudo-labeling' )
     parser.add_argument('--lower_threshold', type=float, default=0.2, help ='lower threshold for uncertainty score' )
-    parser.add_argument('--dataset_name', type=str, default='agaricus-lepiota', help='segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
-        German-credit |  madelon_no | dna_no | agaricus-lepiota | breast_cancer | digits | yeast | emotions')
+    parser.add_argument('--dataset_name', type=str, default='synthetic_control_6c', help='segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
+        German-credit |  madelon_no | agaricus-lepiota | breast_cancer | digits | yeast | emotions')
     parser.add_argument('--verbose', type=str, default='No', help='verbose Yes or No')
     parser.add_argument('--output_filename', type=str, default='', help='name of output files')
     parser.add_argument('--save_dir', type=str, default='results_output', help='name of save directory')
