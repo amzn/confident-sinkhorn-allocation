@@ -8,14 +8,14 @@ import argparse
 import logging
 import pickle
 from tqdm import tqdm
-from confident_sinkhorn_allocation.algorithm.pseudo_labeling import Pseudo_Labeling
-from confident_sinkhorn_allocation.algorithm.flexmatch import FlexMatch
-#from confident_sinkhorn_allocation.algorithm.ups import UPS
-#from confident_sinkhorn_allocation.algorithm.csa import CSA
+from algorithm.pseudo_labeling import Pseudo_Labeling
+from algorithm.flexmatch import FlexMatch
+#from algorithm.ups import UPS
+#from algorithm.csa import CSA
 
 
-from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled,append_acc_early_termination
-from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled_for_multilabel
+from utilities.utils import get_train_test_unlabeled,append_acc_early_termination
+from utilities.utils import get_train_test_unlabeled_for_multilabel
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -43,9 +43,9 @@ def run_experiments(args, save_dir):
        
         # load the data        
         if IsMultiLabel==False: # multiclassification
-            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,path_to_data='all_data.pickle',random_state=tt)
+            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled(dataset_name,path_to_data='../all_data.pickle',random_state=tt)
         else: # multi-label classification
-            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled_for_multilabel(dataset_name,path_to_data='all_data_multilabel.pickle',random_state=tt)
+            x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled_for_multilabel(dataset_name,path_to_data='../all_data_multilabel.pickle',random_state=tt)
         
         pseudo_labeller = FlexMatch(x_unlabeled,x_test,y_test, 
                 num_iters=numIters,

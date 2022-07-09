@@ -43,16 +43,35 @@ or
 
 
 
-## Reproduce the experiments in Colab [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Miq659eCRpbH0qzLjGWxbSbhZQmwx_lM#scrollTo=tubZzNQc3EFg)
+## Reproduce the experiments [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Miq659eCRpbH0qzLjGWxbSbhZQmwx_lM#scrollTo=tubZzNQc3EFg)
 
-## Demo Confident Sinkhorn Allocation for Multiclassification in Colab [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ntienvu/confident_sinkhorn_allocation/blob/master/demo_ConfidentSinkhornAllocation.ipynb)
+## Demo Confident Sinkhorn Allocation for Multiclassification [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ntienvu/confident_sinkhorn_allocation/blob/master/demo_ConfidentSinkhornAllocation.ipynb)
 
 
-## Demo Confident Sinkhorn Allocation for Multilabel Classification in Colab [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1z9_ijDdqHNqNah6olqpMUkh8F15kpu5G#scrollTo=j-JijnqQbdmC)
+## Demo Confident Sinkhorn Allocation for Multilabel [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1z9_ijDdqHNqNah6olqpMUkh8F15kpu5G#scrollTo=j-JijnqQbdmC)
 
 # Run single experiment
-
-
+The result pickle file will be stored in --save_dir
+* run CSA
+```
+cd run_experiments
+python run_csa.py --numIters 5 --numTrials 5 --numXGBs 5 --confidence_choice "ttest" --dataset_name "synthetic_control_6c" --save_dir "results_output"
+```
+* run Pseudo labeling
+```
+cd run_experiments
+python run_pseudo_labeling.py --numIters 5 --numTrials 5 --upper_threshold 0.8 --dataset_name "synthetic_control_6c" --save_dir "results_output"
+```
+* run FlexMatch
+```
+cd run_experiments
+python run_flexmatch.py --numIters 5 --numTrials 5 --upper_threshold 0.8 --dataset_name "synthetic_control_6c" --save_dir "results_output"
+```
+* run UPS
+```
+cd run_experiments
+python run_ups.py --numIters 5 --numTrials 5 --numXGBs 5 --upper_threshold 0.8 --lower_threshold 0.2 --dataset_name "synthetic_control_6c" --save_dir "results_output"
+```
 
 # Plot results
 

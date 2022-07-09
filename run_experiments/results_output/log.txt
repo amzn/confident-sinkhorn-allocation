@@ -1,0 +1,5 @@
+2022-07-09 09:48:29,159 Namespace(confidence_choice='ttest', dataset_name='synthetic_control_6c', numIters=5, numTrials=5, numXGBs=5, output_filename='', save_dir='results_output', verbose='True')
+2022-07-09 09:48:45,368 Namespace(confidence_choice='ttest', dataset_name='synthetic_control_6c', numIters=5, numTrials=5, numXGBs=5, output_filename='', save_dir='results_output', verbose='True')
+2022-07-09 09:50:18,582 Namespace(confidence_choice='ttest', dataset_name='synthetic_control_6c', numIters=5, numTrials=5, numXGBs=5, output_filename='', save_dir='results_output', verbose='True')
+2022-07-09 10:01:55,598 Namespace(dataset_name='synthetic_control_6c', numIters=5, numTrials=5, output_filename='', save_dir='results_output', upper_threshold=0.8, verbose='No')
+2022-07-09 10:03:55,611 Namespace(dataset_name='synthetic_control_6c', lower_threshold=0.2, numIters=5, numTrials=5, numXGBs=5, output_filename='', save_dir='results_output', upper_threshold=0.8, verbose='No')

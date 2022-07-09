@@ -8,13 +8,8 @@ Created on Mon Nov 15 14:19:22 2021
 import numpy as np
 from tqdm import tqdm
 from sklearn.metrics import accuracy_score
-#from scipy.stats import entropy
-import random
 from xgboost import XGBClassifier
 import matplotlib.pyplot as plt
-#import ot  # ot
-from scipy import stats
-import time					
 from .pseudo_labeling import Pseudo_Labeling
 
 

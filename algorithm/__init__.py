@@ -1,4 +1,4 @@
-#from algorithm.flexmatch import FlexMatch
+#from .flexmatch import FlexMatch
 #from .ups import UPS
 #from .pseudo_labeling import Pseudo_Labeling
 #from .csa import CSA
