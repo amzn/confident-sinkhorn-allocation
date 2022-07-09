@@ -55,22 +55,22 @@ The result pickle file will be stored in --save_dir
 * run CSA
 ```
 cd run_experiments
-python run_csa.py --numIters 5 --numTrials 5 --numXGBs 5 --confidence_choice "ttest" --dataset_name "synthetic_control_6c" --save_dir "results_output"
+python run_csa.py --numIters 5 --numTrials 5 --numXGBs 10 --confidence_choice "ttest" --dataset_name "synthetic_control_6c" --save_dir "../results_output"
 ```
 * run Pseudo labeling
 ```
 cd run_experiments
-python run_pseudo_labeling.py --numIters 5 --numTrials 5 --upper_threshold 0.8 --dataset_name "synthetic_control_6c" --save_dir "results_output"
+python run_pseudo_labeling.py --numIters 5 --numTrials 5 --upper_threshold 0.8 --dataset_name "synthetic_control_6c" --save_dir "../results_output"
 ```
 * run FlexMatch
 ```
 cd run_experiments
-python run_flexmatch.py --numIters 5 --numTrials 5 --upper_threshold 0.8 --dataset_name "synthetic_control_6c" --save_dir "results_output"
+python run_flexmatch.py --numIters 5 --numTrials 5 --upper_threshold 0.8 --dataset_name "synthetic_control_6c" --save_dir "../results_output"
 ```
 * run UPS
 ```
 cd run_experiments
-python run_ups.py --numIters 5 --numTrials 5 --numXGBs 5 --upper_threshold 0.8 --lower_threshold 0.2 --dataset_name "synthetic_control_6c" --save_dir "results_output"
+python run_ups.py --numIters 5 --numTrials 5 --numXGBs 10 --upper_threshold 0.8 --lower_threshold 0.2 --dataset_name "synthetic_control_6c" --save_dir "../results_output"
 ```
 
 # Plot results
