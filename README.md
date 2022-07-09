@@ -48,17 +48,18 @@ or
 * xgboost==1.6.1
 ```
 
+# Run experiments
 
-## Reproduce the experiments [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Miq659eCRpbH0qzLjGWxbSbhZQmwx_lM#scrollTo=tubZzNQc3EFg)
-
-
-## Demo Confident Sinkhorn Allocation for Multiclassification [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ntienvu/confident_sinkhorn_allocation/blob/master/demo_ConfidentSinkhornAllocation.ipynb)
+* Reproduce the experiments [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Miq659eCRpbH0qzLjGWxbSbhZQmwx_lM#scrollTo=tubZzNQc3EFg)
 
 
-## Demo Confident Sinkhorn Allocation for Multilabel [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1z9_ijDdqHNqNah6olqpMUkh8F15kpu5G#scrollTo=j-JijnqQbdmC)
+* Demo Confident Sinkhorn Allocation for Multiclassification [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ntienvu/confident_sinkhorn_allocation/blob/master/demo_ConfidentSinkhornAllocation.ipynb)
 
-# Run single experiment
-The result pickle file will be stored in --save_dir
+
+* Demo Confident Sinkhorn Allocation for Multilabel [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1z9_ijDdqHNqNah6olqpMUkh8F15kpu5G#scrollTo=j-JijnqQbdmC)
+
+### Run single experiment. The result pickle file will be stored in --save_dir
+
 * run CSA
 ```
 cd run_experiments
@@ -102,13 +103,11 @@ python run_ups.py --numIters 5 --numTrials 5 --numXGBs 10 --upper_threshold 0.8 
 ```
 python plot_results.py
 ```
-
 <img src="./figs/synthetic_control_6c.png" width="250" height="250" /> <img src="./figs/digits.png" width="250" height="250" />
 <img src="./figs/madelon_no.png" width="250" height="250" /> 
 
 <img src="./figs/analcatdata_authorship.png" width="250" height="250" /> <img src="./figs/breast_cancer.png" width="250" height="250" />
 <img src="./figs/wdbc_569_31.png" width="250" height="250" />
-
 
 # Datasets for multiclassification from UCI
 > we can load all datasets for multiclassification with their datasetName as follows:
