@@ -113,10 +113,10 @@ ax1.set_title(dataset_name, fontsize=20)
 
 plt.grid()
 
-#fig.legend(loc='center')#legend(bbox_to_anchor=(1.1, 1.05))
 lgd=ax1.legend(loc='upper center',fancybox=True,bbox_to_anchor=(0.5, -0.2),ncol=3, fontsize=12)
 
-strFile="figs/{}.pdf".format(dataset_name)
+#strFile="figs/{}.pdf".format(dataset_name)
+strFile="figs/{}.png".format(dataset_name)
 
 fig.savefig(strFile,bbox_inches='tight')
 

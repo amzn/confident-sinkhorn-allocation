@@ -5,15 +5,23 @@
 
 [![Paper](http://img.shields.io/badge/paper-arxiv.2206.05880-B31B1B.svg)](https://arxiv.org/pdf/2206.05880.pdf)
 
+
+We propose a semi-supervised learning method for tabular data that does not
+require any domain-specific assumption. The method we propose is based on pseudo-labeling of a set of unlabeled data using Confident Sinkhorn Allocation (CSA). Our method is theoretically
+driven by the role of uncertainty in robust label assignment in SSL. CSA will assign labels to only the
+data samples with high confidence scores using Sinkhorn’s algorithm. By learning the label
+assignment with optimal transport, CSA eliminates the need to predefine the heuristic thresholds
+used in existing pseudo-labeling methods, which can be greedy. The proposed CSA is applicable
+to any data domain, and could be used in concert with consistency-based approaches, but is
+particularly useful for tabular data where pretext tasks and data augmentation are not applicable.
+
 </div>
 
 # Installations
 ```
 pip install -r requirements.txt
 ```
-
 or
-
 ```
 !pip install git+https://github.com/ntienvu/confident_sinkhorn_allocation
 ```
@@ -41,9 +49,8 @@ or
 ```
 
 
-
-
 ## Reproduce the experiments [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Miq659eCRpbH0qzLjGWxbSbhZQmwx_lM#scrollTo=tubZzNQc3EFg)
+
 
 ## Demo Confident Sinkhorn Allocation for Multiclassification [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ntienvu/confident_sinkhorn_allocation/blob/master/demo_ConfidentSinkhornAllocation.ipynb)
 
@@ -96,16 +103,16 @@ python run_ups.py --numIters 5 --numTrials 5 --numXGBs 10 --upper_threshold 0.8 
 python plot_results.py
 ```
 
-# All datasets are from UCI:
+<img src="./figs/synthetic_control_6c.png" width="250" height="250" /> <img src="./figs/digits.png" width="250" height="250" />
+<img src="./figs/madelon_no.png" width="250" height="250" /> <img src="./figs/analcatdata_authorship.png" width="250" height="250" />
 
-## Datasets for multiclassification
 
+# Datasets for multiclassification from UCI
 > we can load all datasets for multiclassification with their datasetName as follows:
 ```
 with open('all_data.pickle', 'rb') as handle:
     [all_data, datasetName_list] = pickle.load(handle)
 ```
-
 > List of all datasets
 ```
 * segment_2310_20
@@ -118,20 +125,16 @@ with open('all_data.pickle', 'rb') as handle:
 * breast_cancer
 * digits
 ```
-
-## Datasets for multilabel classification
+# Datasets for multilabel classification from UCI
 ```
 with open('all_data_multilabel.pickle', 'rb') as handle:
     [all_data, datasetName_list] = pickle.load(handle)
 ```
-
 ```
 * yeast
 * emotions
 ```
-
 ## Credits and References:
-
 ```
 Vu Nguyen, Sachin Farfade, and Anton van den Hengel. "Confident Sinkhorn Allocation for Pseudo-Labeling." Workshop on Distribution-Free Uncertainty Quantification at ICML 2022
 ```
