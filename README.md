@@ -104,7 +104,10 @@ python plot_results.py
 ```
 
 <img src="./figs/synthetic_control_6c.png" width="250" height="250" /> <img src="./figs/digits.png" width="250" height="250" />
-<img src="./figs/madelon_no.png" width="250" height="250" /> <img src="./figs/analcatdata_authorship.png" width="250" height="250" />
+<img src="./figs/madelon_no.png" width="250" height="250" /> 
+
+<img src="./figs/analcatdata_authorship.png" width="250" height="250" /> <img src="./figs/German-credit.png" width="250" height="250" />
+<img src="./figs/agaricus-lepiota.png" width="250" height="250" />
 
 
 # Datasets for multiclassification from UCI

@@ -7,11 +7,11 @@ sys.path.append('../')
 import numpy as np
 import matplotlib.pyplot as plt
 
-from confident_sinkhorn_allocation.algorithm.pseudo_labeling import Pseudo_Labeling
-from confident_sinkhorn_allocation.algorithm.flexmatch import FlexMatch
-from confident_sinkhorn_allocation.algorithm.ups import UPS
-from confident_sinkhorn_allocation.algorithm.csa import CSA
-from confident_sinkhorn_allocation.utilities.utils import get_train_test_unlabeled,get_train_test_unlabeled_for_multilabel
+from algorithm.pseudo_labeling import Pseudo_Labeling
+from algorithm.flexmatch import FlexMatch
+from algorithm.ups import UPS
+from algorithm.csa import CSA
+from utilities.utils import get_train_test_unlabeled,get_train_test_unlabeled_for_multilabel
 
 import pickle
 
