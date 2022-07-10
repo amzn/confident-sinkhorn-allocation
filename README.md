@@ -83,7 +83,7 @@ python run_ups.py --numIters 5 --numTrials 5 --numXGBs 10 --upper_threshold 0.8 
 * run SLA
 ```
 cd run_experiments
-python run_sla.py --numIters 5 --numTrials 20 --numXGBs 10 --confidence_choice "None" --dataset_name "synthetic_control_6c" --save_dir "../results_output"
+python run_sla.py --numIters 5 --numTrials 5 --numXGBs 10 --confidence_choice "None" --dataset_name "synthetic_control_6c" --save_dir "../results_output"
 ```
 # Plot results
 
