@@ -80,7 +80,11 @@ python run_flexmatch.py --numIters 5 --numTrials 5 --upper_threshold 0.8 --datas
 cd run_experiments
 python run_ups.py --numIters 5 --numTrials 5 --numXGBs 10 --upper_threshold 0.8 --lower_threshold 0.2 --dataset_name "synthetic_control_6c" --save_dir "../results_output"
 ```
-
+* run SLA
+```
+cd run_experiments
+python run_sla.py --numIters 5 --numTrials 20 --numXGBs 10 --confidence_choice "None" --dataset_name "synthetic_control_6c" --save_dir "../results_output"
+```
 # Plot results
 
 > Please specify the following parameters. These parameters will link to the correct files in your result folders

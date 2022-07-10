@@ -43,7 +43,7 @@ class CSA(Pseudo_Labeling):
             if self.confidence_choice is not None:
                 self.confidence_choice="variance"
 
-        if self.confidence_choice is None:
+        if self.confidence_choice is None or self.confidence_choice=="None":
             self.algorithm_name="SLA"
         else:
             self.algorithm_name="CSA_" + self.confidence_choice
@@ -331,7 +331,7 @@ class CSA(Pseudo_Labeling):
             elif self.confidence_choice=="neg_ttest":
                 confidence=self.calculate_ttest(pseudo_labels_prob_list)
                 confidence=-np.asarray(confidence)
-            elif self.confidence_choice==None:  # not using any confidence score, accepting all data point similar to SLA
+            elif self.confidence_choice==None or self.confidence_choice=="None":  # not using any confidence score, accepting all data point similar to SLA
                 confidence=np.ones((1,num_points))
                 
             confidence=np.clip(confidence, a_min=0,a_max=np.max(confidence))

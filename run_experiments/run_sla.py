@@ -2,12 +2,10 @@ import sys
 import os
 
 sys.path.insert(0,'..')
-#sys.path.append('..')
 sys.path.append("../algorithm")
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import numpy as np
-import os
 import argparse
 import logging
 import pickle
@@ -56,9 +54,10 @@ def run_experiments(args, save_dir):
         else: # multi-label classification
             x_train,y_train, x_test, y_test, x_unlabeled=get_train_test_unlabeled_for_multilabel(dataset_name,path_to_data='../all_data_multilabel.pickle',random_state=tt)
         
+        # SLA = CSA where confidence_choice=None
         pseudo_labeller = CSA(x_unlabeled,x_test,y_test, 
                 num_iters=numIters,
-                confidence_choice=confidence_choice,
+                confidence_choice=confidence_choice,#confidence_choice=None
                 num_XGB_models=num_XGB_models,
                 verbose = verbose,
                 IsMultiLabel=IsMultiLabel
@@ -106,7 +105,7 @@ if __name__ == '__main__':
     parser.add_argument('--numIters', type=int, default=5, help='number of Pseudo Iterations')
     parser.add_argument('--numTrials', type=int, default=20, help ='number of Trials (Repeated Experiments)' )
     parser.add_argument('--numXGBs', type=int, default=10, help ='number of XGB models, M=?' )
-    parser.add_argument('--confidence_choice', type=str, default='ttest', help ='confidence choices: ttest | variance | entropy | None' )
+    parser.add_argument('--confidence_choice', type=str, default=None, help ='confidence choices: ttest | variance | entropy | None' )
     parser.add_argument('--dataset_name', type=str, default='synthetic_control_6c', help='segment_2310_20 | wdbc_569_31 | analcatdata_authorship | synthetic_control_6c | \
         German-credit |  madelon_no | agaricus-lepiota | breast_cancer | digits | yeast | emotions')
     parser.add_argument('--verbose', type=str, default='True', help='verbose True or False')
