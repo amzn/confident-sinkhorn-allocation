@@ -4,9 +4,9 @@
 # Confident Sinkhorn Allocation for Pseudo-Labeling
 
   **[Installations](#Installations)**
-| **[Experiments](#Experiments)**
-| **[Plot](#Plot)**
-| **[Datasets](#Datasets)**
+| **[Experiments](#experiments)**
+| **[Plot](#plot)**
+| **[Datasets](#datasets)**
 | **[References](#References)**
 
 [![Paper](http://img.shields.io/badge/paper-arxiv.2206.05880-B31B1B.svg)](https://arxiv.org/pdf/2206.05880.pdf)
@@ -54,7 +54,7 @@ or
 * xgboost==1.6.1
 ```
 
-# Run experiments
+# <a id="experiments" /> Run experiments
 
 * Reproduce the experiments [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Miq659eCRpbH0qzLjGWxbSbhZQmwx_lM#scrollTo=tubZzNQc3EFg)
 
@@ -91,7 +91,7 @@ python run_ups.py --numIters 5 --numTrials 5 --numXGBs 10 --upper_threshold 0.8 
 cd run_experiments
 python run_sla.py --numIters 5 --numTrials 5 --numXGBs 10 --confidence_choice "None" --dataset_name "synthetic_control_6c" --save_dir "../results_output"
 ```
-# Plot results
+# <a id="plot" /> Plot results
 
 > Please specify the following parameters. These parameters will link to the correct files in your result folders
 ```
@@ -119,7 +119,7 @@ python plot_results.py
 <img src="./figs/analcatdata_authorship.png" width="250" height="250" /> <img src="./figs/breast_cancer.png" width="250" height="250" />
 <img src="./figs/wdbc_569_31.png" width="250" height="250" />
 
-# Datasets for multiclassification from UCI
+# # <a id="datasets" /> Datasets for multiclassification from UCI
 > we can load all datasets for multiclassification with their datasetName as follows:
 ```
 with open('all_data.pickle', 'rb') as handle:
