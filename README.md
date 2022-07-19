@@ -4,9 +4,9 @@
 # Confident Sinkhorn Allocation for Pseudo-Labeling
 
   **[Installations](#Installations)**
-| **[Experiments](#experiments)**
-| **[Plot](#plot)**
-| **[Datasets](#datasets)**
+| **[Reproduce Experiments](#experiments)**
+| **[Make Plot](#plot)**
+| **[Public Datasets](#datasets)**
 | **[References](#References)**
 
 [![Paper](http://img.shields.io/badge/paper-arxiv.2206.05880-B31B1B.svg)](https://arxiv.org/pdf/2206.05880.pdf)
@@ -23,7 +23,7 @@ particularly useful for tabular data where pretext tasks and data augmentation a
 
 </div>
 
-# Installations
+## Installations
 ```
 pip install -r requirements.txt
 ```
@@ -54,7 +54,7 @@ or
 * xgboost==1.6.1
 ```
 
-# <a id="experiments" /> Run experiments
+## <a id="experiments" /> Run experiments
 
 * Reproduce the experiments [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Miq659eCRpbH0qzLjGWxbSbhZQmwx_lM#scrollTo=tubZzNQc3EFg)
 
@@ -119,7 +119,7 @@ python plot_results.py
 <img src="./figs/analcatdata_authorship.png" width="250" height="250" /> <img src="./figs/breast_cancer.png" width="250" height="250" />
 <img src="./figs/wdbc_569_31.png" width="250" height="250" />
 
-# # <a id="datasets" /> Datasets for multiclassification from UCI
+## <a id="datasets" /> Datasets for multiclassification from UCI
 > we can load all datasets for multiclassification with their datasetName as follows:
 ```
 with open('all_data.pickle', 'rb') as handle:
@@ -137,7 +137,7 @@ with open('all_data.pickle', 'rb') as handle:
 * breast_cancer
 * digits
 ```
-# Datasets for multilabel classification from UCI
+## Datasets for multilabel classification from UCI
 ```
 with open('all_data_multilabel.pickle', 'rb') as handle:
     [all_data, datasetName_list] = pickle.load(handle)
