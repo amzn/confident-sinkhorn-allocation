@@ -54,7 +54,7 @@ or
 * xgboost==1.6.1
 ```
 
-## <a id="experiments" /> Run experiments
+## <a id="experiments" /> Run and reproduce the experiments
 
 * Reproduce the experiments [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Miq659eCRpbH0qzLjGWxbSbhZQmwx_lM#scrollTo=tubZzNQc3EFg)
 
