@@ -4,10 +4,10 @@
 # Confident Sinkhorn Allocation for Pseudo-Labeling
 
   **[Installations](#Installations)**
-| **[Run experiments](#experiments)**
-| **[Plot results](#Plot)**
-| **[Examples](#examples)**
-| **[Citation](#citation)**
+| **[Run experiments](#Run experiments)**
+| **[Plot results](#Plot results)**
+| **[Datasets for multiclassification from UCI](#datasets)**
+| **[Credits and References](#References)**
 
 [![Paper](http://img.shields.io/badge/paper-arxiv.2206.05880-B31B1B.svg)](https://arxiv.org/pdf/2206.05880.pdf)
 
