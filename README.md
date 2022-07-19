@@ -3,6 +3,12 @@
 
 # Confident Sinkhorn Allocation for Pseudo-Labeling
 
+  **[Installations](#Installations)**
+| **[Run experiments](#experiments)**
+| **[Plot results](#Plot)**
+| **[Examples](#examples)**
+| **[Citation](#citation)**
+
 [![Paper](http://img.shields.io/badge/paper-arxiv.2206.05880-B31B1B.svg)](https://arxiv.org/pdf/2206.05880.pdf)
 
 
