@@ -4,10 +4,10 @@
 # Confident Sinkhorn Allocation for Pseudo-Labeling
 
   **[Installations](#Installations)**
-| **[Run experiments](#Run experiments)**
-| **[Plot results](#Plot results)**
-| **[Datasets for multiclassification from UCI](#datasets)**
-| **[Credits and References](#References)**
+| **[Experiments](#Experiments)**
+| **[Plot](#Plot)**
+| **[Datasets](#Datasets)**
+| **[References](#References)**
 
 [![Paper](http://img.shields.io/badge/paper-arxiv.2206.05880-B31B1B.svg)](https://arxiv.org/pdf/2206.05880.pdf)
 
@@ -146,7 +146,7 @@ with open('all_data_multilabel.pickle', 'rb') as handle:
 * yeast
 * emotions
 ```
-## Credits and References:
+## References:
 ```
 Vu Nguyen, Sachin Farfade, and Anton van den Hengel. "Confident Sinkhorn Allocation for Pseudo-Labeling." Workshop on Distribution-Free Uncertainty Quantification at ICML 2022
 ```
