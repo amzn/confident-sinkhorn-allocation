@@ -45,26 +45,8 @@ def load_encode_data( df ):
     
     return x,y
 
-#path_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/blood-transfusion/transfusion.data' # binary
 
-#path_url='https://archive.ics.uci.edu/ml/machine-learning-databases/abalone/abalone.data'
 path_url='https://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data'
-#path_url='https://archive.ics.uci.edu/ml/machine-learning-databases/chess/king-rook-vs-king-pawn/kr-vs-kp.data'
-#path_url='https://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.data'
-
-
-#df = pd.read_csv(path_url)
-
-
-
-#data = load_iris()
-#data=load_breast_cancer() # binary
-#data=load_digits()
-
-#x=data['data']
-#y = data['target']
-
-
 
 
 all_data = []
@@ -76,46 +58,45 @@ _datasetName =["cjs","hill-valley","segment_2310_20","wdbc_569_31","steel-plates
           "gina_agnostic_no","madelon_no","texture","gas_drift","dna_no"
            ] #
 for ii in range(len(_datasetName)):
+    if ii in [0,1,9,11,12]:
+        continue
     temp = pd.read_csv(os.path.join(path ,_datasetName[ii]+".csv"))
     if temp.shape[0] <= 30000000:
         print(_datasetName[ii])
         all_data.append(temp)
         s_dataname.append(_datasetName[ii]+".csv")
-        
-        
-# load data from UCI
-path_url='https://archive.ics.uci.edu/ml/machine-learning-databases/car/car.data'
-X,Y=load_encode_data( pd.read_csv(path_url) )
-_datasetName.append("car")
-all_data.append( np.hstack((X, np.reshape(Y,(-1,1)))))
-
     
+_datasetName=np.delete(_datasetName,(0,1,9,11,12))
+_datasetName=_datasetName.tolist()
+
+# load data from UCI  
 path_url='https://archive.ics.uci.edu/ml/machine-learning-databases/chess/king-rook-vs-king-pawn/kr-vs-kp.data'
 X,Y=load_encode_data( pd.read_csv(path_url) )
 _datasetName.append("kr_vs_kp")
 all_data.append( np.hstack((X, np.reshape(Y,(-1,1)))))
 
+# load data from UCI  
 path_url='https://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.data'
 X,Y=load_encode_data( pd.read_csv(path_url) )
 _datasetName.append("agaricus-lepiota")
 all_data.append( np.hstack((X, np.reshape(Y,(-1,1)))))
 
 
-
+# load data from scikit-learn  
 data=load_breast_cancer() # binary
 X=data['data']
 Y = data['target']
 _datasetName.append("breast_cancer")
 all_data.append( np.hstack((X, np.reshape(Y,(-1,1)))))
 
-
+# load data from scikit-learn  
 data=load_digits()
 X=data['data']
 Y = data['target']
 _datasetName.append("digits")
 all_data.append( np.hstack((X, np.reshape(Y,(-1,1)))))
 
-
+print(_datasetName)
 
 #with open('all_data_protocol4.pickle', 'wb') as handle:
 with open('all_data.pickle', 'wb') as handle:
