@@ -11,6 +11,8 @@
 
 [![Paper](http://img.shields.io/badge/paper-arxiv.2206.05880-B31B1B.svg)](https://arxiv.org/pdf/2206.05880.pdf)
 
+</div>
+
 ## ✨ Overview
 
 We propose a semi-supervised learning method for tabular data that does not
@@ -22,7 +24,6 @@ used in existing pseudo-labeling methods, which can be greedy. The proposed CSA 
 to any data domain, and could be used in concert with consistency-based approaches, but is
 particularly useful for tabular data where pretext tasks and data augmentation are not applicable.
 
-</div>
 
 ## 🔨 Installations
 ```
