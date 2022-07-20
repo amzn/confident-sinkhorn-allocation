@@ -3,13 +3,14 @@
 
 # Confident Sinkhorn Allocation for Pseudo-Labeling
   **[Overview](#overview)**
-  **[Installations](#installations)**
+| **[Installations](#installations)**
 | **[Reproduce Experiments](#experiments)**
 | **[Make Plot](#plot)**
 | **[Public Datasets](#datasets)**
 | **[References](#References)**
 
 [![Paper](http://img.shields.io/badge/paper-arxiv.2206.05880-B31B1B.svg)](https://arxiv.org/pdf/2206.05880.pdf)
+<a href="https://twitter.com/nguyentienvu" ><img src="https://img.shields.io/twitter/follow/nguyentienvu.svg?style=social" /> </a>
 
 </div>
 
@@ -23,7 +24,6 @@ assignment with optimal transport, CSA eliminates the need to predefine the heur
 used in existing pseudo-labeling methods, which can be greedy. The proposed CSA is applicable
 to any data domain, and could be used in concert with consistency-based approaches, but is
 particularly useful for tabular data where pretext tasks and data augmentation are not applicable.
-
 
 ## <a id="installations" /> 🔨 Installations
 ```
