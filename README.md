@@ -2,8 +2,8 @@
 
 
 # Confident Sinkhorn Allocation for Pseudo-Labeling
-  **[Overview](#Overview)**
-  **[Installations](#Installations)**
+  **[Overview](#overview)**
+  **[Installations](#installations)**
 | **[Reproduce Experiments](#experiments)**
 | **[Make Plot](#plot)**
 | **[Public Datasets](#datasets)**
@@ -13,7 +13,7 @@
 
 </div>
 
-## ✨ Overview
+## <a id="overview" /> ✨ Overview
 
 We propose a semi-supervised learning method for tabular data that does not
 require any domain-specific assumption. The method we propose is based on pseudo-labeling of a set of unlabeled data using Confident Sinkhorn Allocation (CSA). Our method is theoretically
@@ -25,13 +25,9 @@ to any data domain, and could be used in concert with consistency-based approach
 particularly useful for tabular data where pretext tasks and data augmentation are not applicable.
 
 
-## 🔨 Installations
+## <a id="installations" /> 🔨 Installations
 ```
 pip install -r requirements.txt
-```
-or
-```
-!pip install git+https://github.com/ntienvu/confident_sinkhorn_allocation
 ```
 ## Packages
 ```
