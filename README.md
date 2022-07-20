@@ -138,10 +138,12 @@ with open('all_data.pickle', 'rb') as handle:
 * digits
 ```
 ## Datasets for multilabel classification from UCI
+> we can load all datasets for multi-label classification with their datasetName as follows:
 ```
 with open('all_data_multilabel.pickle', 'rb') as handle:
     [all_data, datasetName_list] = pickle.load(handle)
 ```
+> List of all datasets
 ```
 * yeast
 * emotions
