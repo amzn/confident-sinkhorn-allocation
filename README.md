@@ -2,7 +2,7 @@
 
 
 # Confident Sinkhorn Allocation for Pseudo-Labeling
-
+  **[Overview](#Overview)**
   **[Installations](#Installations)**
 | **[Reproduce Experiments](#experiments)**
 | **[Make Plot](#plot)**
@@ -11,6 +11,7 @@
 
 [![Paper](http://img.shields.io/badge/paper-arxiv.2206.05880-B31B1B.svg)](https://arxiv.org/pdf/2206.05880.pdf)
 
+## ✨ Overview
 
 We propose a semi-supervised learning method for tabular data that does not
 require any domain-specific assumption. The method we propose is based on pseudo-labeling of a set of unlabeled data using Confident Sinkhorn Allocation (CSA). Our method is theoretically
@@ -23,7 +24,7 @@ particularly useful for tabular data where pretext tasks and data augmentation a
 
 </div>
 
-## Installations
+## 🔨 Installations
 ```
 pip install -r requirements.txt
 ```
@@ -54,7 +55,7 @@ or
 * xgboost==1.6.1
 ```
 
-## <a id="experiments" /> Run and reproduce the experiments
+## <a id="experiments" /> ➡️  Run and reproduce the experiments
 
 * Reproduce the experiments [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Miq659eCRpbH0qzLjGWxbSbhZQmwx_lM#scrollTo=tubZzNQc3EFg)
 
@@ -148,7 +149,7 @@ with open('all_data_multilabel.pickle', 'rb') as handle:
 * yeast
 * emotions
 ```
-## References:
+## ✏️ References:
 ```
 Vu Nguyen, Sachin Farfade, and Anton van den Hengel. "Confident Sinkhorn Allocation for Pseudo-Labeling." Workshop on Distribution-Free Uncertainty Quantification at ICML 2022
 ```
