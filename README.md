@@ -57,7 +57,7 @@ pip install -r requirements.txt
 * Reproduce the experiments [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Miq659eCRpbH0qzLjGWxbSbhZQmwx_lM#scrollTo=tubZzNQc3EFg)
 
 
-* Demo Confident Sinkhorn Allocation for Multiclassification [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ntienvu/confident_sinkhorn_allocation/blob/master/demo_ConfidentSinkhornAllocation.ipynb)
+* Demo Confident Sinkhorn Allocation for Multiclassification [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1Jx4rY4IPJa9hQp8GpXScSwtlrLwR0VZO)
 
 
 * Demo Confident Sinkhorn Allocation for Multilabel [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1z9_ijDdqHNqNah6olqpMUkh8F15kpu5G#scrollTo=j-JijnqQbdmC)
